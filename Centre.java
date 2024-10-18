@@ -3,8 +3,9 @@ import java.awt.*;
 public class Centre {
 
     //Attributs
-    private int x; // Abscisse
-    private int y; // Ordonnée
+    private Point coordPoint; //Cordonnées du centre
+
+    //Couleurs des carrés autour du centre
     private Color c1;
     private Color c2;
     private Color c3;
@@ -13,8 +14,8 @@ public class Centre {
 
     //Constructeur
     public Centre(int x, int y, Color c1, Color c2, Color c3, Color c4) {
-        this.x = x;
-        this.y = y;
+        coordPoint.setX(x);
+        coordPoint.setY(y);
         this.c1 = c1;
         this.c2 = c2;
         this.c3 = c3;
@@ -25,14 +26,10 @@ public class Centre {
     //Méthodes : 
     //Getter
 
-    public int getX(){
-        return this.x;
+    public Point getCoordPoint(){
+        return this.coordPoint;
     }
-
-    public int getY(){
-        return this.y;
-    }
-
+    
     public Color getC1(){
         return this.c1;
     }
