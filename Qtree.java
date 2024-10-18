@@ -45,5 +45,7 @@ public class Qtree {
         return SO;
     }
 
-    //
+    /*public Qtree searchQtree(Centre p) {
+
+    }*/
 }
