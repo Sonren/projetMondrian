@@ -1,4 +1,5 @@
 package src;
+
 public class Point {
     private int x; //Abscisse
     private int y; //Ordonnée
