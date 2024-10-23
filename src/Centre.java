@@ -1,5 +1,6 @@
 package src;
 import java.awt.*;
+import list; 
 
 public class Centre {
 
@@ -46,6 +47,8 @@ public class Centre {
     public Color getC4(){
         return this.c4;
     }
+
+   
 }
 
 

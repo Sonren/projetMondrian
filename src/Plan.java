@@ -7,31 +7,37 @@ public class Plan {
 
     //Attributs
     private Point upLeft, upRight, downRight, downLeft;
+    private Color col;
 
     //Constructeur
-    public Plan(Point upLeft, Point upRight, Point downRight, Point downLeft){
+    public Plan(Point upLeft, Point upRight, Point downRight, Point downLeft, Color c){
         this.upLeft = upLeft;
         this.upRight = upRight;
         this.downRight = downRight;
         this.downLeft = downLeft;
+        this.col = c;
     }
 
     //Méthodes : 
     //Getter
     public Point getUpLeft() {
-        return upLeft;
+        return this.upLeft;
     }
 
     public Point getUpright() {
-        return upRight;
+        return this.upRight;
     }
 
     public Point getDownRight() {
-        return downRight;
+        return this.downRight;
     }
 
     public Point getDownLeft() {
-        return downLeft;
+        return this.downLeft;
+    }
+
+    public Color getColor() {
+        return this.col;
     }
 
     //Setter
@@ -72,6 +78,8 @@ public class Plan {
         this.downLeft.setY(y);
     }
 
-
+    public void setColor(Color co){
+        this.col = co;
+    }
     
 }
