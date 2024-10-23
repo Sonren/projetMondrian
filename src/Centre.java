@@ -1,6 +1,5 @@
 package src;
 import java.awt.*;
-import list; 
 
 public class Centre {
 

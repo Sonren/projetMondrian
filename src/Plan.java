@@ -1,4 +1,6 @@
 package src;
+import java.awt.*;
+
 
 //Un plan représente un rectangle ( en 2 dimension donc)
 //qui a 4 points (upLeft, upRight, downLeft, downRight)

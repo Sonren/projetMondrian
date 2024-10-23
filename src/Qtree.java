@@ -12,10 +12,7 @@ public class Qtree {
         this.o = p;
         //On va créer le plan de chaque fils en fonction du plan et du centre du Qtree parent
         //Fils NO
-        NO.plan.setUpLeft(plan.getUpLeft());
-        NO.plan.setUpplanight(r.getUpright().getX()/2 , plan.getUpLeft().getY());
-        NO.plan.setDownRight(plan.getUpright().getX()/2 , plan.getUpLeft().getY()/2);
-        NO.plan.setDownLeft(plan.getUpLeft().getX(), plan.getUpLeft().getY()/2);
+        NO= null;
 
 
         //TODO
@@ -58,30 +55,30 @@ public class Qtree {
 
 
     //divise le plan en 4 fils et assigne chaque sous-plan a un fils
-    public void 4_division(){
+    public void fourDivision(){
         NO.plan = new Plan(this.plan.getUpLeft(), 
-                            new Point (this.o.getX(),this.plan.getUpLeft().getY())
-                            , this.o, 
-                            , new Point(this.plan.getUpLeft().getX(), this.o.getY()),
+                            new Point (this.o.getCoordPoint().getX(),this.plan.getUpLeft().getY())
+                            , this.o.getCoordPoint() 
+                            , new Point(this.plan.getUpLeft().getX(), this.o.getCoordPoint().getY()),
                             this.o.getC1()
                         );   
-        NE.plan = new Plan(new Point(this.o.getX(),this.plan.getUpLeft().getY()),
+        NE.plan = new Plan(new Point(this.o.getCoordPoint().getX(),this.plan.getUpLeft().getY()),
                             this.plan.getUpright(),
-                            new Point(this.plan.getUpright(), this.o.getY()),
-                            this.o,
+                            new Point(this.plan.getUpright().getX(), this.o.getCoordPoint().getY()),
+                            this.o.getCoordPoint(),
                             this.o.getC2()
                         );
-        SE.plan = new Plan(this.o,
-                            new Point(this.plan.getUpright().getX(),this.o.getY()),
+        SE.plan = new Plan(this.o.getCoordPoint(),
+                            new Point(this.plan.getUpright().getX(),this.o.getCoordPoint().getY()),
                             this.plan.getDownRight(),
-                            new Point(this.o.getX(),this.plan.getDownRight().getY()),
+                            new Point(this.o.getCoordPoint().getX(),this.plan.getDownRight().getY()),
                             this.o.getC3()
                         );
-        SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.o.getY()),
-                            this.o,
-                            new Point(this.o.getX(),this.plan.getDownLeft().getY()),
+        SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.o.getCoordPoint().getY()),
+                            this.o.getCoordPoint(),
+                            new Point(this.o.getCoordPoint().getX(),this.plan.getDownLeft().getY()),
                             this.plan.getDownLeft(),
                             this.o.getC4()
-                        )
+                        );
     }
 }
