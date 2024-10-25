@@ -1,4 +1,5 @@
 package src;
+import java.util.ArrayList;
 public class Qtree {
 
     //Attributs
@@ -10,7 +11,7 @@ public class Qtree {
     public Qtree(Centre p, Plan plan){
         this.plan = plan;
         this.o = p;
-        this.fourDivision();
+        
     }
     
     //Méthodes
@@ -42,7 +43,8 @@ public class Qtree {
 
 
     //divise le plan en 4 fils et assigne chaque sous-plan a un fils
-    public void fourDivision(){
+    public ArrayList<Qtree> fourDivision(){
+        ArrayList<Qtree> LArbre = new ArrayList<Qtree>();
         this.NO.plan = new Plan(this.plan.getUpLeft(), 
                             new Point (this.o.getCoordPoint().getX(),this.plan.getUpLeft().getY())
                             , this.o.getCoordPoint() 
@@ -67,5 +69,6 @@ public class Qtree {
                             this.plan.getDownLeft(),
                             this.o.getC4()
                         );
+        return LArbre;
     }
 }

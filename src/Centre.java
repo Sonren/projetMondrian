@@ -15,8 +15,7 @@ public class Centre {
 
     //Constructeur
     public Centre(int x, int y, Color c1, Color c2, Color c3, Color c4) {
-        coordPoint.setX(x);
-        coordPoint.setY(y);
+        this.coordPoint = new Point(x, y);
         this.c1 = c1;
         this.c2 = c2;
         this.c3 = c3;
