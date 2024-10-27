@@ -1,5 +1,5 @@
 package src;
-import java.awt.*;
+import java.awt.Color;
 
 public class Centre {
 
@@ -14,6 +14,10 @@ public class Centre {
 
 
     //Constructeur
+    public Centre(){
+        //constructeur vide
+    }
+
     public Centre(int x, int y, Color c1, Color c2, Color c3, Color c4) {  //Pourquoi ne pas faire un tableau de couleurs ? 
         this.coordPoint = new Point(x, y);
         this.c1 = c1;
@@ -21,6 +25,12 @@ public class Centre {
         this.c3 = c3;
         this.c3 = c3;
         this.c4 = c4;
+    }
+
+    public Centre(int x, int y, Color c){
+        this.coordPoint = new Point(x, y);
+        this.c1 = c;
+        this.c2 = this.c3 = this.c4 = null;
     }
 
     //Méthodes : 
