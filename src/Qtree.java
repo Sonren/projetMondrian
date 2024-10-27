@@ -1,17 +1,17 @@
 package src;
+import java.awt.Color;
 import java.util.ArrayList;
 public class Qtree {
 
     //Attributs
     private Plan plan; // partie divisé entre les quatres fils
-    private Centre o;
+    private Centre center;
     private Qtree NO, NE, SE, SO;
 
     //Constructeur avec seulement un Centre
     public Qtree(Centre p, Plan plan){
         this.plan = plan;
-        this.o = p;
-        
+        this.center = p;
     }
     
     //Méthodes
@@ -22,7 +22,7 @@ public class Qtree {
     }
 
     public Centre getCentre() {
-        return o;
+        return center;
     }
 
     public Qtree getNO() {
@@ -46,28 +46,28 @@ public class Qtree {
     public ArrayList<Qtree> fourDivision(){
         ArrayList<Qtree> LArbre = new ArrayList<Qtree>();
         this.NO.plan = new Plan(this.plan.getUpLeft(), 
-                            new Point (this.o.getCoordPoint().getX(),this.plan.getUpLeft().getY())
-                            , this.o.getCoordPoint() 
-                            , new Point(this.plan.getUpLeft().getX(), this.o.getCoordPoint().getY()),
-                            this.o.getC1()
+                            new Point (this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY())
+                            , this.center.getCoordPoint() 
+                            , new Point(this.plan.getUpLeft().getX(), this.center.getCoordPoint().getY()),
+                            this.center.getC1()
                         );   
-        this.NE.plan = new Plan(new Point(this.o.getCoordPoint().getX(),this.plan.getUpLeft().getY()),
+        this.NE.plan = new Plan(new Point(this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY()),
                             this.plan.getUpright(),
-                            new Point(this.plan.getUpright().getX(), this.o.getCoordPoint().getY()),
-                            this.o.getCoordPoint(),
-                            this.o.getC2()
+                            new Point(this.plan.getUpright().getX(), this.center.getCoordPoint().getY()),
+                            this.center.getCoordPoint(),
+                            this.center.getC2()
                         );
-        this.SE.plan = new Plan(this.o.getCoordPoint(),
-                            new Point(this.plan.getUpright().getX(),this.o.getCoordPoint().getY()),
+        this.SE.plan = new Plan(this.center.getCoordPoint(),
+                            new Point(this.plan.getUpright().getX(),this.center.getCoordPoint().getY()),
                             this.plan.getDownRight(),
-                            new Point(this.o.getCoordPoint().getX(),this.plan.getDownRight().getY()),
-                            this.o.getC3()
+                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownRight().getY()),
+                            this.center.getC3()
                         );
-        this.SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.o.getCoordPoint().getY()),
-                            this.o.getCoordPoint(),
-                            new Point(this.o.getCoordPoint().getX(),this.plan.getDownLeft().getY()),
+        this.SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.center.getCoordPoint().getY()),
+                            this.center.getCoordPoint(),
+                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownLeft().getY()),
                             this.plan.getDownLeft(),
-                            this.o.getC4()
+                            this.center.getC4()
                         );
         return LArbre;
     }

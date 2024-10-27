@@ -54,18 +54,18 @@ public class Main {
 
     }
 
-    public static void main(String[] args){
+    //Initialisation des variables utiles pour tester le programme (TODO les mettres dans un fichier)
+    static int taille = 0; //taille du carré pour notre image en sachant qu'on considère que la taille de la fenetre = taille du rectangle
+    static int nbCentre = 0; //nombre de centre fourni pour pouvoir construire la toile
+    public static int epaisseur = 0; //épaisseur des trait qui sépare chaque régions (doit être impair)
+    static int nbpairRecolor = 0; //nombre de paire(point, couleur) de recoloriage pour pour recolorer la zone dans laquelle se situe le point
+    static List<Centre> centers = new ArrayList<>(); // Liste de tous les centres qui vont etre fournir dans le fichier en entrée
+    static List<Centre> lpairRecolor = new ArrayList<>(); // liste de toutes les PairRecolor 
+    static Point[] bordImage = {new Point(0,0), new Point(0,100), new Point(100,100), new Point(100,0)};
+    static Plan surface = new Plan(bordImage[0],bordImage[1],bordImage[2],bordImage[3],Color.WHITE);
+    
 
-        //Initialisation des variables utiles pour tester le programme (TODO les mettres dans un fichier)
-        int taille = 0; //taille du carré pour notre image en sachant qu'on considère que la taille de la fenetre = taille du rectangle
-        int nbCentre = 0; //nombre de centre fourni pour pouvoir construire la toile
-        int epaisseur = 0; //épaisseur des trait qui sépare chaque régions (doit être impair)
-        int nbpairRecolor = 0; //nombre de paire(point, couleur) de recoloriage pour pour recolorer la zone dans laquelle se situe le point
-        Point[] bordImage = {new Point(0,0), new Point(0,100), new Point(100,100), new Point(100,0)};
-        Centre centre = new Centre(50, 50, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW);
-        Plan surface = new Plan(bordImage[0],bordImage[1],bordImage[2],bordImage[3],Color.WHITE);
-        Qtree painting = new Qtree(centre, surface);
-        
+    public static void lectureFichier(){
         //lecture du fichier d'entrée pour pouvoir collecter les données utiles a la construction de la toile
         try(Scanner scanner = new Scanner(new File("Fichier_Entree.txt"))){
             taille = Integer.parseInt(scanner.nextLine().trim());
@@ -74,7 +74,6 @@ public class Main {
 
             //On range tous les centres dans une liste (centers) ces centres sont lus dans le fichier d'entrée 
             //a voir pour rajouter un test pour voir si le nombre de centres m = a la taille de la liste 
-            List<Centre> centers = new ArrayList<>();
             for (int i = 0; i < nbCentre; i++) {
                 String[] listeData = scanner.nextLine().trim().split(", ");
                 int x = Integer.parseInt(listeData[0].trim());
@@ -89,7 +88,6 @@ public class Main {
             nbpairRecolor = Integer.parseInt(scanner.nextLine().trim());
 
             //La liste de toutes les PairRecolor extraite du fichier en entrée
-            List<Centre> lpairRecolor = new ArrayList<>();
             for (int j = 0; j < nbpairRecolor; j++){
                 String[] listdataPair = scanner.nextLine().trim().split(", ");
                 int z = Integer.parseInt(listdataPair[0].trim());
@@ -101,16 +99,27 @@ public class Main {
         catch(IOException e){
             e.printStackTrace();
         }
-        
-        
+    }
+
+
+    
+
+    public static void main(String[] args){
+        lectureFichier();
+        Qtree painting = new Qtree(centers.getFirst(), surface);
+        toImage(painting);
+    }
+
+    public static void toImage(Qtree qfinal){
         Image draw = new Image (taille, taille);
-        draw.setRectangle(0,taille,0,taille, Couleurs.B.getCouleurs());
+        draw.setRectangle(0,taille,0,taille, Couleurs.N.getCouleurs());
+        draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX(), qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY(), Couleurs.N.getCouleurs());
+        draw.setRectangle(qfinal.getNO().getPlan().getDownLeft().getX(), qfinal.getNO().getPlan().getDownRight().getX(), qfinal.getNO().getPlan().getDownLeft().getY(), qfinal.getNO().getPlan().getUpLeft().getY(), qfinal.getCentre().getC1());
         try{
             draw.save("final_draw");
         }
         catch (Exception e){
             System.out.println(e);
         }
-
     }
 }
