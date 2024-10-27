@@ -14,7 +14,7 @@ public class Centre {
 
 
     //Constructeur
-    public Centre(int x, int y, Color c1, Color c2, Color c3, Color c4) {
+    public Centre(int x, int y, Color c1, Color c2, Color c3, Color c4) {  //Pourquoi ne pas faire un tableau de couleurs ? 
         this.coordPoint = new Point(x, y);
         this.c1 = c1;
         this.c2 = c2;
