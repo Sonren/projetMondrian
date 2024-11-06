@@ -12,9 +12,20 @@ public class Qtree {
     public Qtree(Centre p, Plan plan){
         this.plan = plan;
         this.center = p;
+        NO = null;
+        NE = null;
+        SE = null;
+        SO = null;
     }
     
     //Méthodes
+
+    //Retourne vrai si le Qtree n'a pas de fils
+    public boolean isEmpty (){
+        return (NO == null && NE == null && SE == null && SO == null);
+    }
+
+
     //Getter
 
     public Plan getPlan() {
@@ -70,5 +81,38 @@ public class Qtree {
                             this.center.getC4()
                         );
         return LArbre;
+    }
+
+    public Qtree searchQtree(Centre c) {
+        //Si le Qtree n'a pas de fils c'est qu'on a trouvé le bon Qtree
+        if (this.isEmpty()) {
+            return this;
+        }
+        else {
+            //Soit l'abscisse et l'ordonnée du point sont inférieurs à l'abscisse et l'ordonnée du centre du Qtree principale
+            if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()
+             && c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
+                //Alors on appelle la fonction searchQtree sur le fils SO
+                return SO.searchQtree(c);
+            }
+            //Soit l'abscisse est supérieur à l'abscisse du centre du Qtree principale et l'ordonnée du point est inférieur à l'ordonnée du centre du Qtree principale
+            if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX()
+            && c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
+                //Alors on appelle la fonction searchQtree sur le fils SE
+                return SE.searchQtree(c);
+            }
+            //Soit l'abscisse est inférieur à l'abscisse du centre du Qtree principale et l'ordonnée du point est supérieur à l'ordonnée du centre du Qtree principale
+            if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()
+            && c.getCoordPoint().getY() > this.center.getCoordPoint().getY()) {
+                return NO.searchQtree(c);
+            }
+            //Soit l'abscisse et l'ordonnée du point sont supérieurs à l'abscisse et l'ordonnée du centre du Qtree principale
+            if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX()
+            && c.getCoordPoint().getY() > this.center.getCoordPoint().getY()) {
+                //Alors on appelle la fonction searchQtree sur le fils SE
+                return NE.searchQtree(c);
+            }
+            return null;
+        }
     }
 }
