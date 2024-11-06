@@ -1,7 +1,7 @@
-import src.*;
+package src;
+
 import java.awt.Color;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class Main {
 
     }
 
-    //Initialisation des variables utiles pour tester le programme (TODO les mettres dans un fichier)
+    //Initialisation des variables utiles pour tester le programme 
     static int taille = 0; //taille du carré pour notre image en sachant qu'on considère que la taille de la fenetre = taille du rectangle
     static int nbCentre = 0; //nombre de centre fourni pour pouvoir construire la toile
     public static int epaisseur = 0; //épaisseur des trait qui sépare chaque régions (doit être impair)
@@ -108,13 +108,14 @@ public class Main {
         lectureFichier();
         Qtree painting = new Qtree(centers.getFirst(), surface);
         toImage(painting);
+        System.out.println("hello world !");
     }
 
     public static void toImage(Qtree qfinal){
         Image draw = new Image (taille, taille);
-        draw.setRectangle(0,taille,0,taille, Couleurs.N.getCouleurs());
-        draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX(), qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY(), Couleurs.N.getCouleurs());
-        draw.setRectangle(qfinal.getNO().getPlan().getDownLeft().getX(), qfinal.getNO().getPlan().getDownRight().getX(), qfinal.getNO().getPlan().getDownLeft().getY(), qfinal.getNO().getPlan().getUpLeft().getY(), qfinal.getCentre().getC1());
+        draw.setRectangle(0,taille,0,taille, Couleurs.B.getCouleurs());
+        draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX(), qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY(), Couleurs.B.getCouleurs());
+        //draw.setRectangle(qfinal.getNO().getPlan().getDownLeft().getX(), qfinal.getNO().getPlan().getDownRight().getX(), qfinal.getNO().getPlan().getDownLeft().getY(), qfinal.getNO().getPlan().getUpLeft().getY(), qfinal.getCentre().getC1());
         try{
             draw.save("final_draw");
         }

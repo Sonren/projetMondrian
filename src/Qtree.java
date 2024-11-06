@@ -1,5 +1,4 @@
 package src;
-import java.awt.Color;
 import java.util.ArrayList;
 public class Qtree {
 
