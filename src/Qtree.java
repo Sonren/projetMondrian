@@ -1,5 +1,5 @@
 package src;
-import java.util.ArrayList;
+import java.util.List;
 public class Qtree {
 
     //Attributs
@@ -7,6 +7,15 @@ public class Qtree {
     private Centre center;
     private Qtree NO, NE, SE, SO;
 
+    //Construits un Qtree vide
+    public Qtree(){
+        plan = null;
+        center = null;
+        NO = null;
+        NE = null;
+        SE = null;
+        SO = null;
+    }
     //Constructeur avec seulement un Centre
     public Qtree(Centre p, Plan plan){
         this.plan = plan;
@@ -19,9 +28,9 @@ public class Qtree {
     
     //Méthodes
 
-    //Retourne vrai si le Qtree n'a pas de fils
+    //Retourne vrai si le Qtree est vide (Soit c'est une feuille)
     public boolean isEmpty (){
-        return (NO == null && NE == null && SE == null && SO == null);
+        return center == null;
     }
 
 
@@ -52,39 +61,13 @@ public class Qtree {
     }
 
 
-    //divise le plan en 4 fils et assigne chaque sous-plan a un fils
-    public ArrayList<Qtree> fourDivision(){
-        ArrayList<Qtree> LArbre = new ArrayList<Qtree>();
-        this.NO.plan = new Plan(this.plan.getUpLeft(), 
-                            new Point (this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY())
-                            , this.center.getCoordPoint() 
-                            , new Point(this.plan.getUpLeft().getX(), this.center.getCoordPoint().getY()),
-                            this.center.getC1()
-                        );   
-        this.NE.plan = new Plan(new Point(this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY()),
-                            this.plan.getUpright(),
-                            new Point(this.plan.getUpright().getX(), this.center.getCoordPoint().getY()),
-                            this.center.getCoordPoint(),
-                            this.center.getC2()
-                        );
-        this.SE.plan = new Plan(this.center.getCoordPoint(),
-                            new Point(this.plan.getUpright().getX(),this.center.getCoordPoint().getY()),
-                            this.plan.getDownRight(),
-                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownRight().getY()),
-                            this.center.getC3()
-                        );
-        this.SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.center.getCoordPoint().getY()),
-                            this.center.getCoordPoint(),
-                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownLeft().getY()),
-                            this.plan.getDownLeft(),
-                            this.center.getC4()
-                        );
-        return LArbre;
-    }
+    
 
+    //Etant donné un Centre C, retourne la région divisible (Qtree) à laquelle appartient C
     public Qtree searchQtree(Centre c) {
         //Si le Qtree n'a pas de fils c'est qu'on a trouvé le bon Qtree
         if (this.isEmpty()) {
+            this.center = c;
             return this;
         }
         else {
@@ -115,10 +98,41 @@ public class Qtree {
         }
     }
 
-    public void addQtree(Centre c, Qtree nouveau) {
-        nouveau.center = c;
-        this.fourDivision();
+    //divise le plan en 4 fils et assigne chaque sous-plan a un fils
+    public void addQtree(){
+        this.NO.plan = new Plan(this.plan.getUpLeft(), 
+                            new Point (this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY())
+                            , this.center.getCoordPoint() 
+                            , new Point(this.plan.getUpLeft().getX(), this.center.getCoordPoint().getY()),
+                            this.center.getC1()
+                        );   
+        this.NE.plan = new Plan(new Point(this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY()),
+                            this.plan.getUpright(),
+                            new Point(this.plan.getUpright().getX(), this.center.getCoordPoint().getY()),
+                            this.center.getCoordPoint(),
+                            this.center.getC2()
+                        );
+        this.SE.plan = new Plan(this.center.getCoordPoint(),
+                            new Point(this.plan.getUpright().getX(),this.center.getCoordPoint().getY()),
+                            this.plan.getDownRight(),
+                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownRight().getY()),
+                            this.center.getC3()
+                        );
+        this.SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.center.getCoordPoint().getY()),
+                            this.center.getCoordPoint(),
+                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownLeft().getY()),
+                            this.plan.getDownLeft(),
+                            this.center.getC4()
+                        );
     }
+
+    //Etant donnée une liste de centre, construit le Qtree en entier
+    public void buildQtree(List<Centre> centers) {
+        for (int i = 0 ; i < centers.size() ; i++) {
+            this.searchQtree(centers.get(i)).addQtree();
+        }
+    }
+
 
     
 }
