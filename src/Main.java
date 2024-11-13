@@ -101,16 +101,6 @@ public class Main {
         }
     }
 
-
-    
-
-    public static void main(String[] args){
-        lectureFichier();
-        Qtree painting = new Qtree(centers.getFirst(), surface);
-        toImage(painting);
-        System.out.println("hello world !");
-    }
-
     public static void toImage(Qtree qfinal){
         Image draw = new Image (taille, taille);
         draw.setRectangle(0,taille,0,taille, Couleurs.B.getCouleurs());
@@ -123,4 +113,18 @@ public class Main {
             System.out.println(e);
         }
     }
+
+    public static void reColor(){
+        
+    }
+
+    
+
+    public static void main(String[] args){
+        lectureFichier();
+        Qtree painting = new Qtree(centers.getFirst(), surface);
+        toImage(painting);
+        System.out.println("hello world !");
+    }
 }
+
