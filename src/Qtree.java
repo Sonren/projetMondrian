@@ -115,5 +115,10 @@ public class Qtree {
         }
     }
 
+    public void addQtree(Centre c, Qtree nouveau) {
+        nouveau.center = c;
+        this.fourDivision();
+    }
+
     
 }
