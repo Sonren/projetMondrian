@@ -62,7 +62,7 @@ public class Main {
     static List<Centre> centers = new ArrayList<>(); // Liste de tous les centres qui vont etre fournir dans le fichier en entrée
     static List<Centre> lpairRecolor = new ArrayList<>(); // liste de toutes les PairRecolor 
     static Point[] bordImage = {new Point(0,0), new Point(0,100), new Point(100,100), new Point(100,0)};
-    static Plan surface = new Plan(bordImage[0],bordImage[1],bordImage[2],bordImage[3],Color.WHITE);
+    static Plan surface = new Plan(bordImage[0],bordImage[1],bordImage[2],bordImage[3],Color.RED);
     
 
     public static void lectureFichier(){
@@ -70,7 +70,6 @@ public class Main {
         try(Scanner scanner = new Scanner(new File("Fichier_Entree.txt"))){
             taille = Integer.parseInt(scanner.nextLine().trim());
             nbCentre = Integer.parseInt(scanner.nextLine().trim());
-            System.out.println("n = " + taille + " m = " + nbCentre);
 
             //On range tous les centres dans une liste (centers) ces centres sont lus dans le fichier d'entrée 
             //a voir pour rajouter un test pour voir si le nombre de centres m = a la taille de la liste 
@@ -103,9 +102,7 @@ public class Main {
 
     public static void toImage(Qtree qfinal){
         Image draw = new Image (taille, taille);
-        draw.setRectangle(0,taille,0,taille, Couleurs.B.getCouleurs());
-        draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX(), qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY(), Couleurs.B.getCouleurs());
-        //draw.setRectangle(qfinal.getNO().getPlan().getDownLeft().getX(), qfinal.getNO().getPlan().getDownRight().getX(), qfinal.getNO().getPlan().getDownLeft().getY(), qfinal.getNO().getPlan().getUpLeft().getY(), qfinal.getCentre().getC1());
+        draw.setRectangle(qfinal.getPlan().getDownRight().getX(),qfinal.getPlan().getDownLeft().getX(),qfinal.getPlan().getDownRight().getY(),qfinal.getPlan().getUpright().getY(), qfinal.getPlan().getColor());
         try{
             draw.save("final_draw");
         }
@@ -114,10 +111,26 @@ public class Main {
         }
     }
 
-    public static void reColor(){
-        
+
+    public void Recolor(List<Centre> listPairR, Qtree root){
+        for (int i = 0; i < listPairR.size(); i++){
+            Qtree temp = new Qtree(null, null); 
+            temp = root.searchQtree(listPairR.get(i));  //a voir car je ne sais pas si temp est une copie ou un pointeur vers root(...) 
+            temp.getPlan().setColor(listPairR.get(i).getC1()); //solution remplacer temp par root.searchQtree(listPairR.get(i))  mais complexite nul
+            compressQTree(temp); //si c'est une copie cela ne va pas changer la valeur dans compressQtree 
+        }
     }
 
+    //a voir si l'on a bien le pere et non une feuille ce qui voudrait dire que ses fils sont nul
+    public void compressQTree(Qtree qpere){
+        if (qpere.getNE().getPlan().getColor() == qpere.getNO().getPlan().getColor() && qpere.getSE().getPlan().getColor() == qpere.getSO().getPlan().getColor() && qpere.getNE().getPlan().getColor() == qpere.getSE().getPlan().getColor()){
+            qpere.getPlan().setColor(qpere.getNE().getPlan().getColor());
+            qpere.setNullSon();
+            System.out.println("l'arbre a bien été compréssé");
+        }
+        System.out.println("il n'y a pas besoin de compresser l'arbre");
+    }
+    
     
 
     public static void main(String[] args){

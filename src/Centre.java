@@ -27,6 +27,7 @@ public class Centre {
         this.c4 = c4;
     }
 
+    // constructeur qui permet d'instancier les pairs recolors 
     public Centre(int x, int y, Color c){
         this.coordPoint = new Point(x, y);
         this.c1 = c;
