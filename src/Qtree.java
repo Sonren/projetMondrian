@@ -60,6 +60,30 @@ public class Qtree {
         return SO;
     }
 
+    public void setNullNE(){
+        this.NE = null;
+    }
+
+    public void setNullNO(){
+        this.NO = null;
+    }
+
+    public void setNullSE(){
+        this.SE = null;
+    }
+
+    public void setNullSO(){
+        this.SO = null;
+    }
+
+    public void setNullSon(){
+        this.setNullNE();
+        this.setNullNO();
+        this.setNullSE();
+        this.setNullSO();
+    }
+
+
 
     
    //Etant donné un Centre C, retourne la région divisible (Qtree) à laquelle appartient C
