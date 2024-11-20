@@ -87,74 +87,80 @@ public class Qtree {
 
     
    //Etant donné un Centre C, retourne la région divisible (Qtree) à laquelle appartient C
-   public Qtree searchQtree(Centre c) {
-    //Si le Qtree n'a pas de fils c'est qu'on a trouvé le bon Qtree
-    if (this.isEmpty()) {
-        this.center = c;
-        return this;
-    }
-    else {
-        //Soit l'abscisse et l'ordonnée du point sont inférieurs à l'abscisse et l'ordonnée du centre du Qtree principale
+    public Qtree searchQtree(Centre c) {
+        // Si le nœud actuel est une feuille, on a trouvé le bon endroit
+        if (this.isEmpty()) {
+            this.center = c; // On affecte le centre ici
+            return this;
+        }
+    
+        // Détermine dans quel sous-quadrant se trouve le point `c`
         if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()
-         && c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
-            //Alors on appelle la fonction searchQtree sur le fils SO
-            return SO.searchQtree(c);
+            && c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
+            // Sud-Ouest
+            if (this.SO == null) this.SO = new Qtree(); // Initialise si nécessaire
+            return this.SO.searchQtree(c);
+        } else if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX()
+            && c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
+            // Sud-Est
+            if (this.SE == null) this.SE = new Qtree(); // Initialise si nécessaire
+            return this.SE.searchQtree(c);
+        } else if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()
+            && c.getCoordPoint().getY() > this.center.getCoordPoint().getY()) {
+            // Nord-Ouest
+            if (this.NO == null) this.NO = new Qtree(); // Initialise si nécessaire
+            return this.NO.searchQtree(c);
+        } else {
+            // Nord-Est
+            if (this.NE == null) this.NE = new Qtree(); // Initialise si nécessaire
+            return this.NE.searchQtree(c);
         }
-        //Soit l'abscisse est supérieur à l'abscisse du centre du Qtree principale et l'ordonnée du point est inférieur à l'ordonnée du centre du Qtree principale
-        if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX()
-        && c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
-            //Alors on appelle la fonction searchQtree sur le fils SE
-            return SE.searchQtree(c);
-        }
-        //Soit l'abscisse est inférieur à l'abscisse du centre du Qtree principale et l'ordonnée du point est supérieur à l'ordonnée du centre du Qtree principale
-        if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()
-        && c.getCoordPoint().getY() > this.center.getCoordPoint().getY()) {
-            return NO.searchQtree(c);
-        }
-        //Soit l'abscisse et l'ordonnée du point sont supérieurs à l'abscisse et l'ordonnée du centre du Qtree principale
-        if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX()
-        && c.getCoordPoint().getY() > this.center.getCoordPoint().getY()) {
-            //Alors on appelle la fonction searchQtree sur le fils SE
-            return NE.searchQtree(c);
-        }
-        return null;
     }
-}
 
-//divise le plan en 4 fils et assigne chaque sous-plan a un fils
-public void addQtree(){
-    this.NO.plan = new Plan(this.plan.getUpLeft(), 
-                        new Point (this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY())
-                        , this.center.getCoordPoint() 
-                        , new Point(this.plan.getUpLeft().getX(), this.center.getCoordPoint().getY()),
-                        this.center.getC1()
-                    );   
-    this.NE.plan = new Plan(new Point(this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY()),
-                        this.plan.getUpright(),
-                        new Point(this.plan.getUpright().getX(), this.center.getCoordPoint().getY()),
-                        this.center.getCoordPoint(),
-                        this.center.getC2()
-                    );
-    this.SE.plan = new Plan(this.center.getCoordPoint(),
-                        new Point(this.plan.getUpright().getX(),this.center.getCoordPoint().getY()),
-                        this.plan.getDownRight(),
-                        new Point(this.center.getCoordPoint().getX(),this.plan.getDownRight().getY()),
-                        this.center.getC3()
-                    );
-    this.SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.center.getCoordPoint().getY()),
-                        this.center.getCoordPoint(),
-                        new Point(this.center.getCoordPoint().getX(),this.plan.getDownLeft().getY()),
-                        this.plan.getDownLeft(),
-                        this.center.getC4()
-                    );
-}
+    //divise le plan en 4 fils et assigne chaque sous-plan a un fils
+    public void addQtree(){
+        //On initialise les fils
+        this.NO = new Qtree();
+        this.NE = new Qtree();
+        this.SE = new Qtree();
+        this.SO = new Qtree();
 
-//Etant donnée une liste de centre, construit le Qtree en entier
-public void buildQtree(List<Centre> centers) {
-    for (int i = 0 ; i < centers.size() ; i++) {
-        this.searchQtree(centers.get(i)).addQtree();
+        this.NO.plan = new Plan(this.plan.getUpLeft(), 
+                            new Point (this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY())
+                            , this.center.getCoordPoint() 
+                            , new Point(this.plan.getUpLeft().getX(), this.center.getCoordPoint().getY()),
+                            this.center.getC1()
+                        );   
+        this.NE.plan = new Plan(new Point(this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY()),
+                            this.plan.getUpright(),
+                            new Point(this.plan.getUpright().getX(), this.center.getCoordPoint().getY()),
+                            this.center.getCoordPoint(),
+                            this.center.getC2()
+                        );
+        this.SE.plan = new Plan(this.center.getCoordPoint(),
+                            new Point(this.plan.getUpright().getX(),this.center.getCoordPoint().getY()),
+                            this.plan.getDownRight(),
+                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownRight().getY()),
+                            this.center.getC3()
+                        );
+        this.SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.center.getCoordPoint().getY()),
+                            this.center.getCoordPoint(),
+                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownLeft().getY()),
+                            this.plan.getDownLeft(),
+                            this.center.getC4()
+                        );
     }
-}
+    //Etant donnée une liste de centre, construit le Qtree en entier
+    public void buildQtree(List<Centre> centers) {
+        for (Centre c : centers) {
+            Qtree target = this.searchQtree(c);
+            if (target.isEmpty()) { // Vérifiez si le nœud est une feuille
+                target.addQtree(); // Divisez seulement si nécessaire
+            } else {
+                System.out.println("ya un truc bizarre");
+            }
+        }
+    }
 
 
 
