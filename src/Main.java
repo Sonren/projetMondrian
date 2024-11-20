@@ -62,7 +62,7 @@ public class Main {
     static List<Centre> centers = new ArrayList<>(); // Liste de tous les centres qui vont etre fournir dans le fichier en entrée
     static List<Centre> lpairRecolor = new ArrayList<>(); // liste de toutes les PairRecolor 
     static Point[] bordImage = {new Point(0,0), new Point(0,100), new Point(100,100), new Point(100,0)};
-    static Plan surface = new Plan(bordImage[0],bordImage[1],bordImage[2],bordImage[3],Color.RED);
+    static Plan surface = new Plan(bordImage[1],bordImage[2],bordImage[3],bordImage[0],Color.BLUE);
     
 
     public static void lectureFichier(){
@@ -102,9 +102,9 @@ public class Main {
 
     public static void toImage(Qtree qfinal){
         Image draw = new Image (taille, taille);
-        draw.setRectangle(qfinal.getPlan().getDownRight().getX(),qfinal.getPlan().getDownLeft().getX(),qfinal.getPlan().getDownRight().getY(),qfinal.getPlan().getUpright().getY(), qfinal.getPlan().getColor());
+        draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX()+1, qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY()+1, qfinal.getPlan().getColor());
         try{
-            draw.save("final_draw");
+            draw.save("../final_draw");
         }
         catch (Exception e){
             System.out.println(e);
