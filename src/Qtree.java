@@ -124,6 +124,8 @@ public class Qtree {
         this.NE = new Qtree();
         this.SE = new Qtree();
         this.SO = new Qtree();
+        
+        
 
         this.NO.plan = new Plan(this.plan.getUpLeft(), 
                             new Point (this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY())
@@ -154,7 +156,7 @@ public class Qtree {
     public void buildQtree(List<Centre> centers) {
         for (Centre c : centers) {
             Qtree target = this.searchQtree(c);
-            if (target.isEmpty()) { // Vérifiez si le nœud est une feuille
+            if (!target.isEmpty()) { // Vérifiez si le nœud est une feuille
                 target.addQtree(); // Divisez seulement si nécessaire
             } else {
                 System.out.println("ya un truc bizarre");

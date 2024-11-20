@@ -61,8 +61,8 @@ public class Main {
     static int nbpairRecolor = 0; //nombre de paire(point, couleur) de recoloriage pour pour recolorer la zone dans laquelle se situe le point
     static List<Centre> centers = new ArrayList<>(); // Liste de tous les centres qui vont etre fournir dans le fichier en entrée
     static List<Centre> lpairRecolor = new ArrayList<>(); // liste de toutes les PairRecolor 
-    static Point[] bordImage = {new Point(0,0), new Point(0,100), new Point(100,100), new Point(100,0)};
-    static Plan surface = new Plan(bordImage[1],bordImage[2],bordImage[3],bordImage[0],Color.BLUE);
+    static Point[] bordImage = {new Point(0,0), new Point(0,1000), new Point(1000,1000), new Point(1000,0)};
+    static Plan surface = new Plan(bordImage[1],bordImage[2],bordImage[3],bordImage[0],Color.BLUE); //taille de l'image 
     
 
     public static void lectureFichier(){
@@ -100,9 +100,18 @@ public class Main {
         }
     }
 
-    public static void toImage(Qtree qfinal){
-        Image draw = new Image (taille, taille);
-        draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX()+1, qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY()+1, qfinal.getPlan().getColor());
+    public static void toImage(Qtree qfinal, Image draw){
+        if(qfinal.isEmpty()){
+            draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX(), qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY(), qfinal.getPlan().getColor());
+        }else if(! qfinal.getNE().isEmpty()){
+            toImage(qfinal.getNE(), draw);
+        }else if(! qfinal.getNO().isEmpty()){
+            toImage(qfinal.getNO(), draw);
+        }else if(! qfinal.getSE().isEmpty()){
+            toImage(qfinal.getSE(), draw);
+        }else if(! qfinal.getSO().isEmpty()){
+            toImage(qfinal.getSO(), draw);
+        }
         try{
             draw.save("../final_draw");
         }
@@ -136,7 +145,10 @@ public class Main {
     public static void main(String[] args){
         lectureFichier();
         Qtree painting = new Qtree(centers.getFirst(), surface);
-        toImage(painting);
+        painting.addQtree();
+        painting.buildQtree(centers);
+        Image masterpiece = new Image (taille, taille);
+        toImage(painting, masterpiece);
         System.out.println("hello world !");
     }
 }

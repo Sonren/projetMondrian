@@ -20,6 +20,7 @@ public class Plan {
         this.col = c;
     }
 
+
     //Méthodes : 
     //Getter
     public Point getUpLeft() {
