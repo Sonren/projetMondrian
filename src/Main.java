@@ -102,25 +102,50 @@ public class Main {
 
     //probleme je pense ne passe dans les feuille que lorsque chaque fils est fils (voir feuille brouillon)
     public static void toImage(Qtree qfinal, Image draw){
-        if(qfinal.noSon() && qfinal.getPlan() != null){
+        if(qfinal.getNE().isEmpty()){
             draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
                               qfinal.getPlan().getDownRight().getX(), 
                               qfinal.getPlan().getDownLeft().getY(), 
                               qfinal.getPlan().getUpLeft().getY(), 
                               qfinal.getPlan().getColor());
-        } 
-        if(! qfinal.getNE().isEmpty()){
-            toImage(qfinal.getNE(), draw);
-        } 
-        if(! qfinal.getNO().isEmpty()){
-            toImage(qfinal.getNO(), draw);
+        }else{
+            toImage(qfinal.getNE(), draw)
         }
-        if(! qfinal.getSE().isEmpty()){
-            toImage(qfinal.getSE(), draw);
+        if(qfinal.getNO().isEmpty()){
+            draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
+                              qfinal.getPlan().getDownRight().getX(), 
+                              qfinal.getPlan().getDownLeft().getY(), 
+                              qfinal.getPlan().getUpLeft().getY(),                              qfinal.getPlan().getUpLeft().getY(), 
+                              qfinal.getPlan().getColor());
+
+        }else{
+            toImage(qfinal.getNO(), draw)
         }
-        if(! qfinal.getSO().isEmpty()){
-            toImage(qfinal.getSO(), draw);
+
+        if(qfinal.getSO().isEmpty()){
+            draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
+                              qfinal.getPlan().getDownRight().getX(), 
+                              qfinal.getPlan().getDownLeft().getY(), 
+                              qfinal.getPlan().getUpLeft().getY(),                              qfinal.getPlan().getUpLeft().getY(), 
+                              qfinal.getPlan().getColor());
+        }else{
+            toImage(qfinal.getSo(), draw)
         }
+
+        if(qfinal.getSE().isEmpty()){
+                        draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
+                                          qfinal.getPlan().getDownRight().getX(), 
+                                          qfinal.getPlan().getDownLeft().getY(), 
+                                          qfinal.getPlan().getUpLeft().getY(),                              qfinal.getPlan().getUpLeft().getY(), 
+                               .          qfinal.getPlan().getColor());
+        }else{
+            toImage(qfinal.getSE(), draw)
+        }
+
+
+
+
+
         try{
             draw.save("../final_draw");
         }
