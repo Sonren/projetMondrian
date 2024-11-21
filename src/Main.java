@@ -102,14 +102,22 @@ public class Main {
 
     public static void toImage(Qtree qfinal, Image draw){
         if(qfinal.noSon()){
-            draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX(), qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY(), qfinal.getPlan().getColor());
-        }else if(! qfinal.getNE().isEmpty()){
+            draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
+                              qfinal.getPlan().getDownRight().getX(), 
+                              qfinal.getPlan().getDownLeft().getY(), 
+                              qfinal.getPlan().getUpLeft().getY(), 
+                              qfinal.getPlan().getColor());
+        }else{ 
+        if(! qfinal.getNE().isEmpty()){
             toImage(qfinal.getNE(), draw);
-        }else if(! qfinal.getNO().isEmpty()){
+        } 
+        if(! qfinal.getNO().isEmpty()){
             toImage(qfinal.getNO(), draw);
-        }else if(! qfinal.getSE().isEmpty()){
+        }
+        if(! qfinal.getSE().isEmpty()){
             toImage(qfinal.getSE(), draw);
-        }else if(! qfinal.getSO().isEmpty()){
+        }
+        if(! qfinal.getSO().isEmpty()){
             toImage(qfinal.getSO(), draw);
         }
         try{
@@ -117,6 +125,7 @@ public class Main {
         }
         catch (Exception e){
             System.out.println(e);
+        }
         }
     }
 
@@ -150,6 +159,7 @@ public class Main {
         Qtree painting = new Qtree(centers.getFirst(), surface);
         painting.addQtree();
         painting.buildQtree(centers);
+        painting.printTree(5);
         toText(painting);
         Image masterpiece = new Image (taille, taille);
         toImage(painting, masterpiece);

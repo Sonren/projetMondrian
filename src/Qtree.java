@@ -1,5 +1,7 @@
 package src;
 import java.util.List;
+import java.awt.Color;
+import src.Main.Couleurs;
 public class Qtree {
 
     //Attributs
@@ -159,14 +161,50 @@ public class Qtree {
     //Etant donnée une liste de centre, construit le Qtree en entier
     public void buildQtree(List<Centre> centers) {
         for (Centre c : centers) {
-            Qtree target = this.searchQtree(c);
-            if (!target.isEmpty()) { // Vérifiez si le nœud est une feuille
-                target.addQtree(); // Divisez seulement si nécessaire
-            } else {
-                System.out.println("ya un truc bizarre");
+            if(!(c == centers.getFirst())){
+                Qtree target = this.searchQtree(c);
+                if (!target.isEmpty()) { // Vérifiez si le nœud est une feuille
+                    target.addQtree(); // Divisez seulement si nécessaire
+                } else {
+                    System.out.println("ya un truc bizarre");
+                }
             }
         }
     }
+
+
+    public void printTree(int level) {
+        // Indentation en fonction du niveau
+        String indent = "  ".repeat(level);
+    
+        // Affiche la couleur du plan courant
+        if (this.plan != null) {
+            System.out.println(indent + this.plan.getColor());
+        } else {
+            System.out.println(indent + "vide");
+        }
+    
+        // Appelle récursivement pour les sous-arbres
+        if (this.NO != null) {
+            System.out.println(indent + "NO :");
+            this.NO.printTree(level + 1);
+        }
+        if (this.NE != null) {
+            System.out.println(indent + "NE :");
+            this.NE.printTree(level + 1);
+        }
+        if (this.SE != null) {
+            System.out.println(indent + "SE :");
+            this.SE.printTree(level + 1);
+        }
+        if (this.SO != null) {
+            System.out.println(indent + "SO :");
+            this.SO.printTree(level + 1);
+        }
+    }
+    
+    
+    
 
 
 
