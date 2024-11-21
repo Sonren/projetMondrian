@@ -101,7 +101,7 @@ public class Main {
     }
 
     public static void toImage(Qtree qfinal, Image draw){
-        if(qfinal.isEmpty()){
+        if(qfinal.noSon()){
             draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), qfinal.getPlan().getDownRight().getX(), qfinal.getPlan().getDownLeft().getY(), qfinal.getPlan().getUpLeft().getY(), qfinal.getPlan().getColor());
         }else if(! qfinal.getNE().isEmpty()){
             toImage(qfinal.getNE(), draw);
@@ -140,6 +140,9 @@ public class Main {
         System.out.println("il n'y a pas besoin de compresser l'arbre");
     }
     
+    public static void toText(Qtree textQtree){
+
+    }
     
 
     public static void main(String[] args){
@@ -147,6 +150,7 @@ public class Main {
         Qtree painting = new Qtree(centers.getFirst(), surface);
         painting.addQtree();
         painting.buildQtree(centers);
+        toText(painting);
         Image masterpiece = new Image (taille, taille);
         toImage(painting, masterpiece);
         System.out.println("hello world !");

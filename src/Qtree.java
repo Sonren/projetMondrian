@@ -33,6 +33,10 @@ public class Qtree {
         return center == null;
     }
 
+    public boolean noSon(){
+        return this.NE.isEmpty() && this.NO.isEmpty() && this.SE.isEmpty() && this.SO.isEmpty();
+    }
+
 
     //Getter
 
