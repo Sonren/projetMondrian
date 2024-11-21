@@ -100,14 +100,15 @@ public class Main {
         }
     }
 
+    //probleme je pense ne passe dans les feuille que lorsque chaque fils est fils (voir feuille brouillon)
     public static void toImage(Qtree qfinal, Image draw){
-        if(qfinal.noSon()){
+        if(qfinal.noSon() && qfinal.getPlan() != null){
             draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
                               qfinal.getPlan().getDownRight().getX(), 
                               qfinal.getPlan().getDownLeft().getY(), 
                               qfinal.getPlan().getUpLeft().getY(), 
                               qfinal.getPlan().getColor());
-        }else{ 
+        } 
         if(! qfinal.getNE().isEmpty()){
             toImage(qfinal.getNE(), draw);
         } 
@@ -126,7 +127,7 @@ public class Main {
         catch (Exception e){
             System.out.println(e);
         }
-        }
+        
     }
 
 
@@ -159,7 +160,7 @@ public class Main {
         Qtree painting = new Qtree(centers.getFirst(), surface);
         painting.addQtree();
         painting.buildQtree(centers);
-        painting.printTree(5);
+        painting.printTree(10);
         toText(painting);
         Image masterpiece = new Image (taille, taille);
         toImage(painting, masterpiece);

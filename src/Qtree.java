@@ -161,7 +161,7 @@ public class Qtree {
     //Etant donnée une liste de centre, construit le Qtree en entier
     public void buildQtree(List<Centre> centers) {
         for (Centre c : centers) {
-            if(!(c == centers.getFirst())){
+            if(!(c == centers.getFirst())){  //pour eviter la redondance du premier arbre masi voir pour changer cela autrement
                 Qtree target = this.searchQtree(c);
                 if (!target.isEmpty()) { // Vérifiez si le nœud est une feuille
                     target.addQtree(); // Divisez seulement si nécessaire
