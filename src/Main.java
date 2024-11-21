@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 
 
 
@@ -53,6 +55,22 @@ public class Main {
         }
 
     }
+
+    Map<Color, String> colorNames = new HashMap<>();
+    colorNames.put(Color.RED, "R");
+    colorNames.put(Color.GREEN, "V");
+    colorNames.put(Color.BLUE, "Be");
+    colorNames.put(Color.BLACK, "N");
+    colorNames.put(Color.WHITE, "Ba");
+    colorNames.put(Color.YELLOW, "J");
+    colorNames.put(Color.GRAY, "G");
+    colorNames.put(Color.DARK_GRAY, "DG");
+    colorNames.put(Color.ORANGE, "O");
+    colorNames.put(Color.LIGHT_GRAY, "LG");
+    colorNames.put(Color.PINK, "Ro");
+    colorNames.put(Color.CYAN, "C");
+    colorNames.put(Color.MAGENTA, "M");
+
 
     //Initialisation des variables utiles pour tester le programme 
     static int taille = 0; //taille du carré pour notre image en sachant qu'on considère que la taille de la fenetre = taille du rectangle
