@@ -1,7 +1,8 @@
 package src;
 import java.util.List;
 import java.awt.Color;
-import src.Main.Couleurs;
+import java.util.Map;
+
 public class Qtree {
 
     //Attributs

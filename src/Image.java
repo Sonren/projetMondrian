@@ -19,6 +19,7 @@ public class Image
 {
   private final BufferedImage image; // The image
 
+
   /** Constructs an empty image (initially black) of width `width` and height `height` */
   public Image(int width, int height) {
     image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -29,7 +30,12 @@ public class Image
    * WARNING : NO CHECK IS DONE. IF YOU WRITE OUTSIDE THE IMAGE IT WILL RAISE AN ERROR
    */
   public void setPixel(int x, int y, Color col) {
-    image.setRGB(x,y,col.getRGB());
+    int newY = height() - 1 - y; // Transform Y coordinate for bottom-left origin
+
+    // Ensure the transformed coordinates are within bounds
+    if (x >= 0 && x < width() && newY >= 0 && newY < height()) {
+        image.setRGB(x, newY, col.getRGB());
+    }
   }
   /**
    * Sets all the pixels in the given region to the given color.

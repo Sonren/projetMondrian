@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.HashMap;
-import java.util.Map;
+
 
 
 
@@ -55,22 +55,6 @@ public class Main {
         }
 
     }
-
-    Map<Color, String> colorNames = new HashMap<>();
-    colorNames.put(Color.RED, "R");
-    colorNames.put(Color.GREEN, "V");
-    colorNames.put(Color.BLUE, "Be");
-    colorNames.put(Color.BLACK, "N");
-    colorNames.put(Color.WHITE, "Ba");
-    colorNames.put(Color.YELLOW, "J");
-    colorNames.put(Color.GRAY, "G");
-    colorNames.put(Color.DARK_GRAY, "DG");
-    colorNames.put(Color.ORANGE, "O");
-    colorNames.put(Color.LIGHT_GRAY, "LG");
-    colorNames.put(Color.PINK, "Ro");
-    colorNames.put(Color.CYAN, "C");
-    colorNames.put(Color.MAGENTA, "M");
-
 
     //Initialisation des variables utiles pour tester le programme 
     static int taille = 0; //taille du carré pour notre image en sachant qu'on considère que la taille de la fenetre = taille du rectangle
@@ -200,6 +184,24 @@ public class Main {
     
 
     public static void main(String[] args){
+
+        //Définition d'une HasMap pour pouvoir faire le toText
+        HashMap<Color, String> colorNames = new HashMap<Color, String>();
+        colorNames.put(Color.RED, "R");
+        colorNames.put(Color.GREEN, "V");
+        colorNames.put(Color.BLUE, "Be");   
+        colorNames.put(Color.BLACK, "N");
+        colorNames.put(Color.WHITE, "Ba");
+        colorNames.put(Color.YELLOW, "J");
+        colorNames.put(Color.GRAY, "G");
+        colorNames.put(Color.DARK_GRAY, "DG");
+        colorNames.put(Color.ORANGE, "O");
+        colorNames.put(Color.LIGHT_GRAY, "LG");
+        colorNames.put(Color.PINK, "Ro");
+        colorNames.put(Color.CYAN, "C");
+        colorNames.put(Color.MAGENTA, "M");
+
+
         lectureFichier();
         Qtree painting = new Qtree(centers.getFirst(), surface);
         painting.addQtree();
@@ -207,8 +209,8 @@ public class Main {
         painting.printTree(10);
         toText(painting);
         Image masterpiece = new Image (taille, taille);
-        //toImage(painting, masterpiece);
-        masterpiece.setRectangle(200, 800, 200, 400, Color.BLUE);
+        toImage(painting, masterpiece);
+        painting.toText(colorNames);
         System.out.println("hello world !");
     }
 }
