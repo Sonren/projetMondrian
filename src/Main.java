@@ -121,43 +121,44 @@ public class Main {
     //probleme je pense ne passe dans les feuille que lorsque chaque fils est fils (voir feuille brouillon)
     public static void toImage(Qtree qfinal, Image draw){
         if(qfinal.getNE().isEmpty()){
-            draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
-                              qfinal.getPlan().getDownRight().getX(), 
-                              qfinal.getPlan().getDownLeft().getY(), 
-                              qfinal.getPlan().getUpLeft().getY(), 
-                              qfinal.getPlan().getColor());
+            draw.setRectangle(qfinal.getNE().getPlan().getDownLeft().getX(), 
+                              qfinal.getNE().getPlan().getDownRight().getX(), 
+                              qfinal.getNE().getPlan().getDownLeft().getY(), 
+                              qfinal.getNE().getPlan().getUpLeft().getY(), 
+                              qfinal.getNE().getPlan().getColor());
         }else{
-            toImage(qfinal.getNE(), draw)
+            toImage(qfinal.getNE(), draw);
         }
+
         if(qfinal.getNO().isEmpty()){
-            draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
-                              qfinal.getPlan().getDownRight().getX(), 
-                              qfinal.getPlan().getDownLeft().getY(), 
-                              qfinal.getPlan().getUpLeft().getY(),                              qfinal.getPlan().getUpLeft().getY(), 
-                              qfinal.getPlan().getColor());
+            draw.setRectangle(qfinal.getNO().getPlan().getDownLeft().getX(), 
+                              qfinal.getNO().getPlan().getDownRight().getX(), 
+                              qfinal.getNO().getPlan().getDownLeft().getY(), 
+                              qfinal.getNO().getPlan().getUpLeft().getY(),                              
+                              qfinal.getNO().getPlan().getColor());
 
         }else{
-            toImage(qfinal.getNO(), draw)
+            toImage(qfinal.getNO(), draw);
         }
 
         if(qfinal.getSO().isEmpty()){
-            draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
-                              qfinal.getPlan().getDownRight().getX(), 
-                              qfinal.getPlan().getDownLeft().getY(), 
-                              qfinal.getPlan().getUpLeft().getY(),                              qfinal.getPlan().getUpLeft().getY(), 
-                              qfinal.getPlan().getColor());
+            draw.setRectangle(qfinal.getSO().getPlan().getDownLeft().getX(), 
+                              qfinal.getSO().getPlan().getDownRight().getX(), 
+                              qfinal.getSO().getPlan().getDownLeft().getY(), 
+                              qfinal.getSO().getPlan().getUpLeft().getY(),                               
+                              qfinal.getSO().getPlan().getColor());
         }else{
-            toImage(qfinal.getSo(), draw)
+            toImage(qfinal.getSO(), draw);
         }
 
         if(qfinal.getSE().isEmpty()){
-                        draw.setRectangle(qfinal.getPlan().getDownLeft().getX(), 
-                                          qfinal.getPlan().getDownRight().getX(), 
-                                          qfinal.getPlan().getDownLeft().getY(), 
-                                          qfinal.getPlan().getUpLeft().getY(),                              qfinal.getPlan().getUpLeft().getY(), 
-                               .          qfinal.getPlan().getColor());
-        }else{
-            toImage(qfinal.getSE(), draw)
+            draw.setRectangle(qfinal.getSE().getPlan().getDownLeft().getX(), 
+                              qfinal.getSE().getPlan().getDownRight().getX(), 
+                              qfinal.getSE().getPlan().getDownLeft().getY(), 
+                              qfinal.getSE().getPlan().getUpLeft().getY(),                              
+                              qfinal.getSE().getPlan().getColor());
+}else{
+            toImage(qfinal.getSE(), draw);
         }
 
 
@@ -206,7 +207,8 @@ public class Main {
         painting.printTree(10);
         toText(painting);
         Image masterpiece = new Image (taille, taille);
-        toImage(painting, masterpiece);
+        //toImage(painting, masterpiece);
+        masterpiece.setRectangle(200, 800, 200, 400, Color.BLUE);
         System.out.println("hello world !");
     }
 }
