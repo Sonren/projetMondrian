@@ -37,7 +37,13 @@ public class Qtree {
     }
 
     public boolean noSon(){
-        return this.NE.isEmpty() && this.NO.isEmpty() && this.SE.isEmpty() && this.SO.isEmpty();
+        boolean son;
+        if (this.NE == null || this.NO == null || this.SE == null || this.SO == null) {
+            return false;
+        }
+        
+        son = this.NE.isEmpty() && this.NO.isEmpty() && this.SE.isEmpty() && this.SO.isEmpty();
+        return son;
     }
 
 

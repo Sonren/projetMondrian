@@ -109,7 +109,7 @@ public class Main {
                               qfinal.getNE().getPlan().getDownRight().getX(), 
                               qfinal.getNE().getPlan().getDownLeft().getY(), 
                               qfinal.getNE().getPlan().getUpLeft().getY(), 
-                              qfinal.getNE().getPlan().getColor());
+                              qfinal.getNE().getPlan().getColor());    
         }else{
             toImage(qfinal.getNE(), draw);
         }
@@ -141,14 +141,9 @@ public class Main {
                               qfinal.getSE().getPlan().getDownLeft().getY(), 
                               qfinal.getSE().getPlan().getUpLeft().getY(),                              
                               qfinal.getSE().getPlan().getColor());
-}else{
+        }else{
             toImage(qfinal.getSE(), draw);
         }
-
-
-
-
-
         try{
             draw.save("../final_draw");
         }
@@ -158,8 +153,26 @@ public class Main {
         
     }
 
+    public static void drawOutline(Qtree qfinal, Image draw){
+        if(qfinal.getNE().noSon() && qfinal.getNO().noSon() && qfinal.getSE().noSon() && qfinal.getSO().noSon()){
+            draw.setRectangle(qfinal.getSE().getPlan().getDownRight().getX()-epaisseur/2, qfinal.getSO().getPlan().getDownLeft().getX()+epaisseur/2, qfinal.getSE().getPlan().getDownRight().getY(), qfinal.getNO().getPlan().getUpLeft().getY(),  Color.BLACK);
+        }
+        if(!qfinal.getNE().noSon()){
+            drawOutline(qfinal.getNE(), draw);
+        }
+        if(!qfinal.getNO().noSon()){
+            drawOutline(qfinal.getNO(), draw);
+        }
+        if(!qfinal.getSE().noSon()){
+            drawOutline(qfinal.getSE(), draw);
+        }
+        if(!qfinal.getSO().noSon()){
+            drawOutline(qfinal.getSO(), draw);
+        }
+    }
 
-    public void Recolor(List<Centre> listPairR, Qtree root){
+
+    public static void recolor(List<Centre> listPairR, Qtree root){
         for (int i = 0; i < listPairR.size(); i++){
             Qtree temp = new Qtree(null, null); 
             temp = root.searchQtree(listPairR.get(i));  //a voir car je ne sais pas si temp est une copie ou un pointeur vers root(...) 
@@ -169,7 +182,7 @@ public class Main {
     }
 
     //a voir si l'on a bien le pere et non une feuille ce qui voudrait dire que ses fils sont nul
-    public void compressQTree(Qtree qpere){
+    public static void compressQTree(Qtree qpere){
         if (qpere.getNE().getPlan().getColor() == qpere.getNO().getPlan().getColor() && qpere.getSE().getPlan().getColor() == qpere.getSO().getPlan().getColor() && qpere.getNE().getPlan().getColor() == qpere.getSE().getPlan().getColor()){
             qpere.getPlan().setColor(qpere.getNE().getPlan().getColor());
             qpere.setNullSon();
@@ -211,6 +224,8 @@ public class Main {
         Image masterpiece = new Image (taille, taille);
         toImage(painting, masterpiece);
         painting.toText(colorNames);
+        //recolor(centers, painting); a debugger 
+        drawOutline(painting, masterpiece);
         System.out.println("hello world !");
     }
 }
