@@ -154,20 +154,34 @@ public class Main {
     }
 
     public static void drawOutline(Qtree qfinal, Image draw){
-        if(qfinal.getNE().noSon() && qfinal.getNO().noSon() && qfinal.getSE().noSon() && qfinal.getSO().noSon()){
-            draw.setRectangle(qfinal.getSE().getPlan().getDownRight().getX()-epaisseur/2, qfinal.getSO().getPlan().getDownLeft().getX()+epaisseur/2, qfinal.getSE().getPlan().getDownRight().getY(), qfinal.getNO().getPlan().getUpLeft().getY(),  Color.BLACK);
-        }
-        if(!qfinal.getNE().noSon()){
+    
+        int firstX = qfinal.getCentre().getCoordPoint().getX() - epaisseur/2;
+        int lastX = firstX + epaisseur;
+        int firstY = qfinal.getPlan().getDownRight().getY();
+        int lastY = qfinal.getPlan().getUpright().getY();
+        draw.setRectangle(firstX, lastX ,firstY , lastY , Color.BLACK);
+        int secondX = qfinal.getPlan().getDownLeft().getX();
+        int finishX = qfinal.getPlan().getDownRight().getX();
+        int secondY = qfinal.getCentre().getCoordPoint().getY() - epaisseur/2;
+        int finishY = secondY + epaisseur;
+        draw.setRectangle(secondX, finishX, secondY, finishY, Color.BLACK);
+        if(!(qfinal.getNE().getCentre() == null)){
             drawOutline(qfinal.getNE(), draw);
         }
-        if(!qfinal.getNO().noSon()){
+        if(!(qfinal.getNO().getCentre() == null)){
             drawOutline(qfinal.getNO(), draw);
         }
-        if(!qfinal.getSE().noSon()){
+        if(!(qfinal.getSE().getCentre() == null)){
             drawOutline(qfinal.getSE(), draw);
         }
-        if(!qfinal.getSO().noSon()){
+        if(!(qfinal.getSO().getCentre() == null)){
             drawOutline(qfinal.getSO(), draw);
+        }
+        try{
+            draw.save("../final_draw");
+        }
+        catch (Exception e){
+            System.out.println(e);
         }
     }
 
