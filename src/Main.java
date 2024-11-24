@@ -185,13 +185,27 @@ public class Main {
         }
     }
 
-
+    public static void testReference(Qtree root, Centre target, Color newColor) {
+        Qtree targetNode = root.searchQtree(target);
+        if (targetNode != null && targetNode.getPlan() != null) {
+            System.out.println("Couleur avant modification : " + targetNode.getPlan().getColor());
+            targetNode.getPlan().setColor(newColor);
+            System.out.println("Couleur après modification : " + targetNode.getPlan().getColor());
+    
+            // Recherchez à nouveau pour vérifier la persistance
+            Qtree checkNode = root.searchQtree(target);
+            System.out.println("Couleur dans root après modification : " + checkNode.getPlan().getColor());
+        } else {
+            System.out.println("TargetNode ou son plan est null");
+        }
+    }
+    
     public static void recolor(List<Centre> listPairR, Qtree root){
+        System.err.println("\n");
         for (int i = 0; i < listPairR.size(); i++){
-            Qtree temp = new Qtree(null, null); 
-            temp = root.searchQtree(listPairR.get(i));  //a voir car je ne sais pas si temp est une copie ou un pointeur vers root(...) 
-            temp.getPlan().setColor(listPairR.get(i).getC1()); //solution remplacer temp par root.searchQtree(listPairR.get(i))  mais complexite nul
-            compressQTree(temp); //si c'est une copie cela ne va pas changer la valeur dans compressQtree 
+            Qtree temp = root.searchQtree(listPairR.get(i)); 
+            //testReference(root, listPairR.get(i), listPairR.get(i).getC1());
+            temp.getPlan().setColor(listPairR.get(i).getC1());
         }
     }
 
@@ -205,9 +219,6 @@ public class Main {
         System.out.println("il n'y a pas besoin de compresser l'arbre");
     }
     
-    public static void toText(Qtree textQtree){
-
-    }
     
 
     public static void main(String[] args){
@@ -234,12 +245,11 @@ public class Main {
         painting.addQtree();
         painting.buildQtree(centers);
         painting.printTree(10);
-        toText(painting);
         Image masterpiece = new Image (taille, taille);
         toImage(painting, masterpiece);
         painting.toText(colorNames);
-        //recolor(centers, painting); a debugger 
         drawOutline(painting, masterpiece);
+        recolor(lpairRecolor, painting);//a debugger 
         System.out.println("hello world !");
     }
 }
