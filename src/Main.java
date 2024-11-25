@@ -187,7 +187,7 @@ public class Main {
 
     //fonction qui sert a retouver le parent d'un noeud 
     public static Qtree findParent(Qtree root, Qtree target) {
-        if (root == null || root.noSon()) {
+        if (root == null || root.estFeuille()) {
             return null; // Si c'est une feuille ou un arbre vide, pas de parent
         }
     
@@ -217,14 +217,15 @@ public class Main {
 
     public static void recolor(List<Centre> listPairR, Qtree root, Image finaldraw){
         System.err.println("\n");
-        for (int i = 0; i < listPairR.size(); i++){
+        for (int i = 0; i < 2; i++){
             Qtree temp = root.searchLeaf(listPairR.get(i)); 
             temp.getPlan().setColor(listPairR.get(i).getC1());
             majRectangle(temp, finaldraw);
             Qtree parentTemp = findParent(root, temp);
-            drawOutline(parentTemp, finaldraw);
+            Qtree parenDeParent = findParent(root, parentTemp);  //mauvaise compléxité car on le fait deux fois mais évite de devoir le faire pour tout l'arbre
+            drawOutline(parenDeParent, finaldraw);
         }
-        compressQTree(root, finaldraw);
+        //compressQTree(root, finaldraw);
         try{
             finaldraw.save("../final_draw");
         }
@@ -235,7 +236,12 @@ public class Main {
 
     //creer une fonction qui va retrouver le pere a partir des fils a voir si cela est mieux que introduire un attribut parent
     public static void compressQTree(Qtree qroot, Image compressDraw){
-        if(qroot.getNE().getCentre() == null && qroot.getNO().getCentre() == null && qroot.getSE().getCentre() == null && qroot.getSO().getCentre() == null){
+        if(!qroot.estFeuille()){
+            compressQTree(qroot.getNE(), compressDraw);
+            compressQTree(qroot.getNO(), compressDraw);
+            compressQTree(qroot.getSE(), compressDraw);
+            compressQTree(qroot.getSO(), compressDraw);
+
             if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
                qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
                qroot.getNE().getPlan().getColor() == qroot.getSE().getPlan().getColor()){
@@ -247,18 +253,6 @@ public class Main {
                 qroot.setNullSon();
                 System.out.println("l'arbre a été compressé");                         
                }
-        }
-        if(!(qroot.getNE().getCentre() == null)){
-            compressQTree(qroot.getNE(), compressDraw);
-        }
-        if(!(qroot.getNO().getCentre() == null)){
-            compressQTree(qroot.getNO(), compressDraw);
-        }
-        if(!(qroot.getSE().getCentre() == null)){
-            compressQTree(qroot.getSE(), compressDraw);
-        }
-        if(!(qroot.getSO().getCentre() == null)){
-            compressQTree(qroot.getSO(), compressDraw);
         }
         try{
             compressDraw.save("../final_draw");
