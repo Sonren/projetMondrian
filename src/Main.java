@@ -185,38 +185,87 @@ public class Main {
         }
     }
 
-    public static void testReference(Qtree root, Centre target, Color newColor) {
-        Qtree targetNode = root.searchQtree(target);
-        if (targetNode != null && targetNode.getPlan() != null) {
-            System.out.println("Couleur avant modification : " + targetNode.getPlan().getColor());
-            targetNode.getPlan().setColor(newColor);
-            System.out.println("Couleur après modification : " + targetNode.getPlan().getColor());
-    
-            // Recherchez à nouveau pour vérifier la persistance
-            Qtree checkNode = root.searchQtree(target);
-            System.out.println("Couleur dans root après modification : " + checkNode.getPlan().getColor());
-        } else {
-            System.out.println("TargetNode ou son plan est null");
+    //fonction qui sert a retouver le parent d'un noeud 
+    public static Qtree findParent(Qtree root, Qtree target) {
+        if (root == null || root.noSon()) {
+            return null; // Si c'est une feuille ou un arbre vide, pas de parent
         }
+    
+        // Vérifie si le nœud courant est le parent du nœud cible
+        if (root.getNE() == target || root.getNO() == target || 
+            root.getSE() == target || root.getSO() == target) {
+            return root;
+        }
+    
+        // Recherche récursive dans les fils
+        Qtree found = findParent(root.getNE(), target);
+        if (found != null) return found;
+    
+        found = findParent(root.getNO(), target);
+        if (found != null) return found;
+    
+        found = findParent(root.getSE(), target);
+        if (found != null) return found;
+    
+        return findParent(root.getSO(), target);
     }
     
-    public static void recolor(List<Centre> listPairR, Qtree root){
+
+    public static void majRectangle(Qtree rect, Image rectDraw){
+        rectDraw.setRectangle(rect.getPlan().getDownLeft().getX(), rect.getPlan().getDownRight().getX(), rect.getPlan().getDownLeft().getY(), rect.getPlan().getUpLeft().getY(), rect.getPlan().getColor());
+    }
+
+    public static void recolor(List<Centre> listPairR, Qtree root, Image finaldraw){
         System.err.println("\n");
         for (int i = 0; i < listPairR.size(); i++){
-            Qtree temp = root.searchQtree(listPairR.get(i)); 
-            //testReference(root, listPairR.get(i), listPairR.get(i).getC1());
+            Qtree temp = root.searchLeaf(listPairR.get(i)); 
             temp.getPlan().setColor(listPairR.get(i).getC1());
+            majRectangle(temp, finaldraw);
+            Qtree parentTemp = findParent(root, temp);
+            drawOutline(parentTemp, finaldraw);
+        }
+        compressQTree(root, finaldraw);
+        try{
+            finaldraw.save("../final_draw");
+        }
+        catch (Exception e){
+            System.out.println(e);
         }
     }
 
-    //a voir si l'on a bien le pere et non une feuille ce qui voudrait dire que ses fils sont nul
-    public static void compressQTree(Qtree qpere){
-        if (qpere.getNE().getPlan().getColor() == qpere.getNO().getPlan().getColor() && qpere.getSE().getPlan().getColor() == qpere.getSO().getPlan().getColor() && qpere.getNE().getPlan().getColor() == qpere.getSE().getPlan().getColor()){
-            qpere.getPlan().setColor(qpere.getNE().getPlan().getColor());
-            qpere.setNullSon();
-            System.out.println("l'arbre a bien été compréssé");
+    //creer une fonction qui va retrouver le pere a partir des fils a voir si cela est mieux que introduire un attribut parent
+    public static void compressQTree(Qtree qroot, Image compressDraw){
+        if(qroot.getNE().getCentre() == null && qroot.getNO().getCentre() == null && qroot.getSE().getCentre() == null && qroot.getSO().getCentre() == null){
+            if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
+               qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
+               qroot.getNE().getPlan().getColor() == qroot.getSE().getPlan().getColor()){
+                compressDraw.setRectangle(qroot.getPlan().getDownLeft().getX(), 
+                                          qroot.getPlan().getDownRight().getX(), 
+                                          qroot.getPlan().getDownLeft().getY(), 
+                                          qroot.getPlan().getUpLeft().getY(),
+                                          qroot.getPlan().getColor());
+                qroot.setNullSon();
+                System.out.println("l'arbre a été compressé");                         
+               }
         }
-        System.out.println("il n'y a pas besoin de compresser l'arbre");
+        if(!(qroot.getNE().getCentre() == null)){
+            compressQTree(qroot.getNE(), compressDraw);
+        }
+        if(!(qroot.getNO().getCentre() == null)){
+            compressQTree(qroot.getNO(), compressDraw);
+        }
+        if(!(qroot.getSE().getCentre() == null)){
+            compressQTree(qroot.getSE(), compressDraw);
+        }
+        if(!(qroot.getSO().getCentre() == null)){
+            compressQTree(qroot.getSO(), compressDraw);
+        }
+        try{
+            compressDraw.save("../final_draw");
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
     }
     
     
@@ -249,7 +298,7 @@ public class Main {
         toImage(painting, masterpiece);
         painting.toText(colorNames);
         drawOutline(painting, masterpiece);
-        recolor(lpairRecolor, painting);//a debugger 
+        recolor(lpairRecolor, painting, masterpiece);//a debugger 
         System.out.println("hello world !");
     }
 }

@@ -39,7 +39,7 @@ public class Qtree {
     public boolean noSon(){
         boolean son;
         if (this.NE == null || this.NO == null || this.SE == null || this.SO == null) {
-            return false;
+            return true;
         }
         
         son = this.NE.isEmpty() && this.NO.isEmpty() && this.SE.isEmpty() && this.SO.isEmpty();
@@ -96,7 +96,54 @@ public class Qtree {
         this.setNullSO();
     }
 
+    public void setCenter(Centre c){
+        this.center = c;
+    }
 
+    public boolean estFeuille(){
+        return this.getCentre() == null;
+    }
+
+    public boolean estVide(){
+        return this.getPlan() == null;
+    }
+
+
+    public Qtree searchLeaf(Centre c) {
+        // Si le noeud actuel est une feuille (sans fils)
+        if (estFeuille()) {
+            return this; // Retourne la feuille actuelle
+        }
+    
+        // Détermine dans quel sous-quadrant se trouve le point
+        if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX() &&
+            c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
+            // Sud-Ouest
+            if (this.SO != null) {
+                return this.SO.searchLeaf(c);
+            }
+        } else if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX() &&
+                   c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
+            // Sud-Est
+            if (this.SE != null) {
+                return this.SE.searchLeaf(c);
+            }
+        } else if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX() &&
+                   c.getCoordPoint().getY() > this.center.getCoordPoint().getY()) {
+            // Nord-Ouest
+            if (this.NO != null) {
+                return this.NO.searchLeaf(c);
+            }
+        } else if (this.NE != null) {
+            // Nord-Est
+            return this.NE.searchLeaf(c);
+        }
+    
+        // Si aucun fils correspondant n'existe ou n'est initialisé
+        return null;
+    }
+    
+    
 
     
    //Etant donné un Centre C, retourne la région divisible (Qtree) à laquelle appartient C
