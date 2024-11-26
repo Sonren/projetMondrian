@@ -217,7 +217,7 @@ public class Main {
 
     public static void recolor(List<Centre> listPairR, Qtree root, Image finaldraw){
         System.err.println("\n");
-        for (int i = 0; i < 2; i++){
+        for (int i = 0; i < nbpairRecolor; i++){
             Qtree temp = root.searchLeaf(listPairR.get(i)); 
             temp.getPlan().setColor(listPairR.get(i).getC1());
             majRectangle(temp, finaldraw);
@@ -225,7 +225,7 @@ public class Main {
             Qtree parenDeParent = findParent(root, parentTemp);  //mauvaise compléxité car on le fait deux fois mais évite de devoir le faire pour tout l'arbre
             drawOutline(parenDeParent, finaldraw);
         }
-        //compressQTree(root, finaldraw);
+        compressQTree(root, finaldraw);
         try{
             finaldraw.save("../final_draw");
         }
@@ -236,23 +236,74 @@ public class Main {
 
     //creer une fonction qui va retrouver le pere a partir des fils a voir si cela est mieux que introduire un attribut parent
     public static void compressQTree(Qtree qroot, Image compressDraw){
-        if(!qroot.estFeuille()){
+        if (qroot == null) return;
+        if((!qroot.getNE().estFeuille())){
             compressQTree(qroot.getNE(), compressDraw);
-            compressQTree(qroot.getNO(), compressDraw);
-            compressQTree(qroot.getSE(), compressDraw);
-            compressQTree(qroot.getSO(), compressDraw);
-
+        }else{
             if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
                qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
                qroot.getNE().getPlan().getColor() == qroot.getSE().getPlan().getColor()){
-                compressDraw.setRectangle(qroot.getPlan().getDownLeft().getX(), 
-                                          qroot.getPlan().getDownRight().getX(), 
-                                          qroot.getPlan().getDownLeft().getY(), 
-                                          qroot.getPlan().getUpLeft().getY(),
-                                          qroot.getPlan().getColor());
-                qroot.setNullSon();
-                System.out.println("l'arbre a été compressé");                         
-               }
+                    compressDraw.setRectangle(qroot.getPlan().getDownLeft().getX(), 
+                                            qroot.getPlan().getDownRight().getX(), 
+                                            qroot.getPlan().getDownLeft().getY(), 
+                                            qroot.getPlan().getUpLeft().getY(),
+                                            qroot.getNO().getPlan().getColor());
+                    qroot.setNullSon();
+                    qroot.setCenter(null);
+                    System.out.println("l'arbre a été compressé");
+                    return;                         
+            }
+        }
+        if((!qroot.getNO().estFeuille())){
+            compressQTree(qroot.getNO(), compressDraw);
+        }else{
+            if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
+               qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
+               qroot.getNE().getPlan().getColor() == qroot.getSE().getPlan().getColor()){
+                    compressDraw.setRectangle(qroot.getPlan().getDownLeft().getX(), 
+                                            qroot.getPlan().getDownRight().getX(), 
+                                            qroot.getPlan().getDownLeft().getY(), 
+                                            qroot.getPlan().getUpLeft().getY(),
+                                            qroot.getNO().getPlan().getColor());
+                    qroot.setNullSon();
+                    qroot.setCenter(null);
+                    System.out.println("l'arbre a été compressé");
+                    return;                         
+            }
+        }
+        if((!qroot.getSE().estFeuille())){
+            compressQTree(qroot.getSE(), compressDraw);
+        }else{
+            if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
+               qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
+               qroot.getNE().getPlan().getColor() == qroot.getSE().getPlan().getColor()){
+                    compressDraw.setRectangle(qroot.getPlan().getDownLeft().getX(), 
+                                            qroot.getPlan().getDownRight().getX(), 
+                                            qroot.getPlan().getDownLeft().getY(), 
+                                            qroot.getPlan().getUpLeft().getY(),
+                                            qroot.getNO().getPlan().getColor());
+                    qroot.setNullSon();
+                    qroot.setCenter(null);
+                    System.out.println("l'arbre a été compressé");
+                    return;                         
+            }
+        }
+        if((!qroot.getSO().estFeuille())){
+            compressQTree(qroot.getSO(), compressDraw);
+        }else{
+            if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
+               qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
+               qroot.getNE().getPlan().getColor() == qroot.getSE().getPlan().getColor()){
+                    compressDraw.setRectangle(qroot.getPlan().getDownLeft().getX(), 
+                                            qroot.getPlan().getDownRight().getX(), 
+                                            qroot.getPlan().getDownLeft().getY(), 
+                                            qroot.getPlan().getUpLeft().getY(),
+                                            qroot.getNO().getPlan().getColor());
+                    qroot.setNullSon();
+                    qroot.setCenter(null);
+                    System.out.println("l'arbre a été compressé");
+                    return;                         
+            }
         }
         try{
             compressDraw.save("../final_draw");
@@ -292,7 +343,8 @@ public class Main {
         toImage(painting, masterpiece);
         painting.toText(colorNames);
         drawOutline(painting, masterpiece);
-        recolor(lpairRecolor, painting, masterpiece);//a debugger 
+        recolor(lpairRecolor, painting, masterpiece);
+        drawOutline(painting, masterpiece);
         System.out.println("hello world !");
     }
 }
