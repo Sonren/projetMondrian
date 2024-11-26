@@ -1,7 +1,6 @@
 package src;
 import java.util.List;
-import java.awt.Color;
-import java.util.Map;
+
 
 public class Qtree {
 
@@ -226,19 +225,7 @@ public class Qtree {
         }
     }
 
-    public void toText(Map<Color, String> couleurMap) {
-        if(this.isEmpty()) {
-            String colorName = couleurMap.get(this.getPlan().getColor());
-            System.out.print(colorName);
-        } else {
-            System.out.print("(");
-            this.NO.toText(couleurMap);
-            this.NE.toText(couleurMap);
-            this.SE.toText(couleurMap);
-            this.SO.toText(couleurMap);
-            System.out.print(")");
-        }
-    }
+    
 
 
     public void printTree(int level) {

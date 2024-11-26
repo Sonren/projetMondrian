@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.HashMap;
 
 
 
@@ -54,7 +53,26 @@ public class Main {
             return color;
         }
 
+        public static String colorToString(Color col) {
+            if (Color.RED.equals(col)) {
+                return "R";
+            } else if (Color.BLACK.equals(col)) {
+                return "N";
+            } else if (Color.BLUE.equals(col)) {
+                return "B";
+            } else if (Color.YELLOW.equals(col)) {
+                return "J";
+            } else if (Color.GRAY.equals(col)) {
+                return "G";
+            } else {
+                System.out.println("Couleur inconnue !");
+                return null; 
+            }
+        }
     }
+        
+
+    
 
     //Initialisation des variables utiles pour tester le programme 
     static int taille = 0; //taille du carré pour notre image en sachant qu'on considère que la taille de la fenetre = taille du rectangle
@@ -248,6 +266,7 @@ public class Main {
                                             qroot.getPlan().getDownLeft().getY(), 
                                             qroot.getPlan().getUpLeft().getY(),
                                             qroot.getNO().getPlan().getColor());
+                    qroot.getPlan().setColor(qroot.getNE().getPlan().getColor());
                     qroot.setNullSon();
                     qroot.setCenter(null);
                     System.out.println("l'arbre a été compressé");
@@ -265,6 +284,7 @@ public class Main {
                                             qroot.getPlan().getDownLeft().getY(), 
                                             qroot.getPlan().getUpLeft().getY(),
                                             qroot.getNO().getPlan().getColor());
+                    qroot.getPlan().setColor(qroot.getNE().getPlan().getColor());
                     qroot.setNullSon();
                     qroot.setCenter(null);
                     System.out.println("l'arbre a été compressé");
@@ -282,6 +302,7 @@ public class Main {
                                             qroot.getPlan().getDownLeft().getY(), 
                                             qroot.getPlan().getUpLeft().getY(),
                                             qroot.getNO().getPlan().getColor());
+                    qroot.getPlan().setColor(qroot.getNE().getPlan().getColor());
                     qroot.setNullSon();
                     qroot.setCenter(null);
                     System.out.println("l'arbre a été compressé");
@@ -299,6 +320,7 @@ public class Main {
                                             qroot.getPlan().getDownLeft().getY(), 
                                             qroot.getPlan().getUpLeft().getY(),
                                             qroot.getNO().getPlan().getColor());
+                    qroot.getPlan().setColor(qroot.getNE().getPlan().getColor());
                     qroot.setNullSon();
                     qroot.setCenter(null);
                     System.out.println("l'arbre a été compressé");
@@ -313,25 +335,24 @@ public class Main {
         }
     }
     
+
+    public static void toText(Qtree qtext) {
+        if(qtext.isEmpty()) {
+            String colorName = Couleurs.colorToString(qtext.getPlan().getColor());
+            System.out.print(colorName);
+        } else {
+            System.out.print("(");
+            toText(qtext.getNE());
+            toText(qtext.getNO());
+            toText(qtext.getSE());
+            toText(qtext.getSO());
+            System.out.print(")");
+            
+        }
+    }
     
 
     public static void main(String[] args){
-
-        //Définition d'une HasMap pour pouvoir faire le toText
-        HashMap<Color, String> colorNames = new HashMap<Color, String>();
-        colorNames.put(Color.RED, "R");
-        colorNames.put(Color.GREEN, "V");
-        colorNames.put(Color.BLUE, "Be");   
-        colorNames.put(Color.BLACK, "N");
-        colorNames.put(Color.WHITE, "Ba");
-        colorNames.put(Color.YELLOW, "J");
-        colorNames.put(Color.GRAY, "G");
-        colorNames.put(Color.DARK_GRAY, "DG");
-        colorNames.put(Color.ORANGE, "O");
-        colorNames.put(Color.LIGHT_GRAY, "LG");
-        colorNames.put(Color.PINK, "Ro");
-        colorNames.put(Color.CYAN, "C");
-        colorNames.put(Color.MAGENTA, "M");
 
 
         lectureFichier();
@@ -341,11 +362,12 @@ public class Main {
         painting.printTree(10);
         Image masterpiece = new Image (taille, taille);
         toImage(painting, masterpiece);
-        painting.toText(colorNames);
+        toText(painting);
         drawOutline(painting, masterpiece);
         recolor(lpairRecolor, painting, masterpiece);
         drawOutline(painting, masterpiece);
-        System.out.println("hello world !");
+        toText(painting);
     }
 }
+
 
