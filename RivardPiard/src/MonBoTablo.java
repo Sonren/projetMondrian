@@ -89,7 +89,7 @@ public class MonBoTablo {
 
     public static void lectureFichier(){
         //lecture du fichier d'entrée pour pouvoir collecter les données utiles a la construction de la toile
-        try(Scanner scanner = new Scanner(new File("RivardPiard/test/Fichier_Entree.txt"))){
+        try(Scanner scanner = new Scanner(new File("RivardPiard/test/Exemple1.txt"))){
             taille = Integer.parseInt(scanner.nextLine().trim());
             nbCentre = Integer.parseInt(scanner.nextLine().trim());
 
@@ -174,34 +174,36 @@ public class MonBoTablo {
     }
 
     public static void drawOutline(Qtree qfinal, Image draw, String file){
-    
-        int firstX = qfinal.getCentre().getCoordPoint().getX() - epaisseur/2;
-        int lastX = firstX + epaisseur;
-        int firstY = qfinal.getPlan().getDownRight().getY();
-        int lastY = qfinal.getPlan().getUpright().getY();
-        draw.setRectangle(firstX, lastX ,firstY , lastY , Color.BLACK);
-        int secondX = qfinal.getPlan().getDownLeft().getX();
-        int finishX = qfinal.getPlan().getDownRight().getX();
-        int secondY = qfinal.getCentre().getCoordPoint().getY() - epaisseur/2;
-        int finishY = secondY + epaisseur;
-        draw.setRectangle(secondX, finishX, secondY, finishY, Color.BLACK);
-        if(!(qfinal.getNE().getCentre() == null)){
-            drawOutline(qfinal.getNE(), draw, file);
-        }
-        if(!(qfinal.getNO().getCentre() == null)){
-            drawOutline(qfinal.getNO(), draw, file);
-        }
-        if(!(qfinal.getSE().getCentre() == null)){
-            drawOutline(qfinal.getSE(), draw, file);
-        }
-        if(!(qfinal.getSO().getCentre() == null)){
-            drawOutline(qfinal.getSO(), draw, file);
-        }
-        try{
-            draw.save(file);
-        }
-        catch (Exception e){
-            System.out.println(e);
+        if(qfinal != null){
+
+            int firstX = qfinal.getCentre().getCoordPoint().getX() - epaisseur/2;
+            int lastX = firstX + epaisseur;
+            int firstY = qfinal.getPlan().getDownRight().getY();
+            int lastY = qfinal.getPlan().getUpright().getY();
+            draw.setRectangle(firstX, lastX ,firstY , lastY , Color.BLACK);
+            int secondX = qfinal.getPlan().getDownLeft().getX();
+            int finishX = qfinal.getPlan().getDownRight().getX();
+            int secondY = qfinal.getCentre().getCoordPoint().getY() - epaisseur/2;
+            int finishY = secondY + epaisseur;
+            draw.setRectangle(secondX, finishX, secondY, finishY, Color.BLACK);
+            if(!(qfinal.getNE().getCentre() == null)){
+                drawOutline(qfinal.getNE(), draw, file);
+            }
+            if(!(qfinal.getNO().getCentre() == null)){
+                drawOutline(qfinal.getNO(), draw, file);
+            }
+            if(!(qfinal.getSE().getCentre() == null)){
+                drawOutline(qfinal.getSE(), draw, file);
+            }
+            if(!(qfinal.getSO().getCentre() == null)){
+                drawOutline(qfinal.getSO(), draw, file);
+            }
+            try{
+                draw.save(file);
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
         }
     }
 
@@ -385,7 +387,6 @@ public class MonBoTablo {
         Qtree painting = new Qtree(centers.get(0), surface);
         painting.addQtree();
         painting.buildQtree(centers);
-        painting.printTree(10);
         Image masterpiece = new Image (taille, taille);
         toImage(painting, masterpiece, draw1);
         toText(painting, text1);

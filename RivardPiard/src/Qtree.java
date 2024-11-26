@@ -227,40 +227,6 @@ public class Qtree {
 
     
 
-
-    public void printTree(int level) {
-        // Indentation en fonction du niveau
-        String indent = "  ".repeat(level);
-    
-        // Affiche la couleur du plan courant
-        if (this.plan != null) {
-            System.out.println(indent + this.plan.getColor());
-        } else {
-            System.out.println(indent + "vide");
-        }
-    
-        // Appelle récursivement pour les sous-arbres
-        if (this.NO != null) {
-            System.out.println(indent + "NO :");
-            this.NO.printTree(level + 1);
-        }
-        if (this.NE != null) {
-            System.out.println(indent + "NE :");
-            this.NE.printTree(level + 1);
-        }
-        if (this.SE != null) {
-            System.out.println(indent + "SE :");
-            this.SE.printTree(level + 1);
-        }
-        if (this.SO != null) {
-            System.out.println(indent + "SO :");
-            this.SO.printTree(level + 1);
-        }
-    }
-    
-    
-    
-
     
 
 
