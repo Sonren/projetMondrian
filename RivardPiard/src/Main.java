@@ -356,7 +356,7 @@ public class Main {
 
 
         lectureFichier();
-        Qtree painting = new Qtree(centers.getFirst(), surface);
+        Qtree painting = new Qtree(centers.get(0), surface);
         painting.addQtree();
         painting.buildQtree(centers);
         painting.printTree(10);
