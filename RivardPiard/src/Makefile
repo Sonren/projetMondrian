@@ -21,7 +21,7 @@ compile: $(OUT_DIR)
 # Cible pour exécuter le programme, en supposant que le point d'entrée est Main
 run: all
 	@echo "Exécution du programme..."
-	java -cp $(OUT_DIR) Main.java
+	java -cp $(OUT_DIR) MonBoTablo.java
 
 # Crée le répertoire de sortie s'il n'existe pas
 $(OUT_DIR):
