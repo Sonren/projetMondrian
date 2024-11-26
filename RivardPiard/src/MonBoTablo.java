@@ -1,7 +1,9 @@
 package src;
 
 import java.awt.Color;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +89,7 @@ public class MonBoTablo {
 
     public static void lectureFichier(){
         //lecture du fichier d'entrée pour pouvoir collecter les données utiles a la construction de la toile
-        try(Scanner scanner = new Scanner(new File("../test/Fichier_Entree.txt"))){
+        try(Scanner scanner = new Scanner(new File("RivardPiard/test/Fichier_Entree.txt"))){
             taille = Integer.parseInt(scanner.nextLine().trim());
             nbCentre = Integer.parseInt(scanner.nextLine().trim());
 
@@ -121,7 +123,7 @@ public class MonBoTablo {
     }
 
     //probleme je pense ne passe dans les feuille que lorsque chaque fils est fils (voir feuille brouillon)
-    public static void toImage(Qtree qfinal, Image draw){
+    public static void toImage(Qtree qfinal, Image draw, String file){
         if(qfinal.getNE().isEmpty()){
             draw.setRectangle(qfinal.getNE().getPlan().getDownLeft().getX(), 
                               qfinal.getNE().getPlan().getDownRight().getX(), 
@@ -129,7 +131,7 @@ public class MonBoTablo {
                               qfinal.getNE().getPlan().getUpLeft().getY(), 
                               qfinal.getNE().getPlan().getColor());    
         }else{
-            toImage(qfinal.getNE(), draw);
+            toImage(qfinal.getNE(), draw, file);
         }
 
         if(qfinal.getNO().isEmpty()){
@@ -140,7 +142,7 @@ public class MonBoTablo {
                               qfinal.getNO().getPlan().getColor());
 
         }else{
-            toImage(qfinal.getNO(), draw);
+            toImage(qfinal.getNO(), draw, file);
         }
 
         if(qfinal.getSO().isEmpty()){
@@ -150,7 +152,7 @@ public class MonBoTablo {
                               qfinal.getSO().getPlan().getUpLeft().getY(),                               
                               qfinal.getSO().getPlan().getColor());
         }else{
-            toImage(qfinal.getSO(), draw);
+            toImage(qfinal.getSO(), draw, file);
         }
 
         if(qfinal.getSE().isEmpty()){
@@ -160,10 +162,10 @@ public class MonBoTablo {
                               qfinal.getSE().getPlan().getUpLeft().getY(),                              
                               qfinal.getSE().getPlan().getColor());
         }else{
-            toImage(qfinal.getSE(), draw);
+            toImage(qfinal.getSE(), draw, file);
         }
         try{
-            draw.save("../final_draw");
+            draw.save(file);
         }
         catch (Exception e){
             System.out.println(e);
@@ -171,7 +173,7 @@ public class MonBoTablo {
         
     }
 
-    public static void drawOutline(Qtree qfinal, Image draw){
+    public static void drawOutline(Qtree qfinal, Image draw, String file){
     
         int firstX = qfinal.getCentre().getCoordPoint().getX() - epaisseur/2;
         int lastX = firstX + epaisseur;
@@ -184,19 +186,19 @@ public class MonBoTablo {
         int finishY = secondY + epaisseur;
         draw.setRectangle(secondX, finishX, secondY, finishY, Color.BLACK);
         if(!(qfinal.getNE().getCentre() == null)){
-            drawOutline(qfinal.getNE(), draw);
+            drawOutline(qfinal.getNE(), draw, file);
         }
         if(!(qfinal.getNO().getCentre() == null)){
-            drawOutline(qfinal.getNO(), draw);
+            drawOutline(qfinal.getNO(), draw, file);
         }
         if(!(qfinal.getSE().getCentre() == null)){
-            drawOutline(qfinal.getSE(), draw);
+            drawOutline(qfinal.getSE(), draw, file);
         }
         if(!(qfinal.getSO().getCentre() == null)){
-            drawOutline(qfinal.getSO(), draw);
+            drawOutline(qfinal.getSO(), draw, file);
         }
         try{
-            draw.save("../final_draw");
+            draw.save(file);
         }
         catch (Exception e){
             System.out.println(e);
@@ -233,7 +235,7 @@ public class MonBoTablo {
         rectDraw.setRectangle(rect.getPlan().getDownLeft().getX(), rect.getPlan().getDownRight().getX(), rect.getPlan().getDownLeft().getY(), rect.getPlan().getUpLeft().getY(), rect.getPlan().getColor());
     }
 
-    public static void recolor(List<Centre> listPairR, Qtree root, Image finaldraw){
+    public static void recolor(List<Centre> listPairR, Qtree root, Image finaldraw, String file){
         System.err.println("\n");
         for (int i = 0; i < nbpairRecolor; i++){
             Qtree temp = root.searchLeaf(listPairR.get(i)); 
@@ -241,11 +243,11 @@ public class MonBoTablo {
             majRectangle(temp, finaldraw);
             Qtree parentTemp = findParent(root, temp);
             Qtree parenDeParent = findParent(root, parentTemp);  //mauvaise compléxité car on le fait deux fois mais évite de devoir le faire pour tout l'arbre
-            drawOutline(parenDeParent, finaldraw);
+            drawOutline(parenDeParent, finaldraw, file);
         }
-        compressQTree(root, finaldraw);
+        compressQTree(root, finaldraw, file);
         try{
-            finaldraw.save("../final_draw");
+            finaldraw.save(file);
         }
         catch (Exception e){
             System.out.println(e);
@@ -253,10 +255,10 @@ public class MonBoTablo {
     }
 
     //creer une fonction qui va retrouver le pere a partir des fils a voir si cela est mieux que introduire un attribut parent
-    public static void compressQTree(Qtree qroot, Image compressDraw){
+    public static void compressQTree(Qtree qroot, Image compressDraw, String file){
         if (qroot == null) return;
         if((!qroot.getNE().estFeuille())){
-            compressQTree(qroot.getNE(), compressDraw);
+            compressQTree(qroot.getNE(), compressDraw, file);
         }else{
             if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
                qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
@@ -274,7 +276,7 @@ public class MonBoTablo {
             }
         }
         if((!qroot.getNO().estFeuille())){
-            compressQTree(qroot.getNO(), compressDraw);
+            compressQTree(qroot.getNO(), compressDraw, file);
         }else{
             if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
                qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
@@ -292,7 +294,7 @@ public class MonBoTablo {
             }
         }
         if((!qroot.getSE().estFeuille())){
-            compressQTree(qroot.getSE(), compressDraw);
+            compressQTree(qroot.getSE(), compressDraw, file);
         }else{
             if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
                qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
@@ -310,7 +312,7 @@ public class MonBoTablo {
             }
         }
         if((!qroot.getSO().estFeuille())){
-            compressQTree(qroot.getSO(), compressDraw);
+            compressQTree(qroot.getSO(), compressDraw, file);
         }else{
             if(qroot.getNE().getPlan().getColor() == qroot.getNO().getPlan().getColor() &&
                qroot.getSE().getPlan().getColor() == qroot.getSO().getPlan().getColor() &&
@@ -328,7 +330,7 @@ public class MonBoTablo {
             }
         }
         try{
-            compressDraw.save("../final_draw");
+            compressDraw.save(file);
         }
         catch (Exception e){
             System.out.println(e);
@@ -336,24 +338,48 @@ public class MonBoTablo {
     }
     
 
-    public static void toText(Qtree qtext) {
-        if(qtext.isEmpty()) {
-            String colorName = Couleurs.colorToString(qtext.getPlan().getColor());
-            System.out.print(colorName);
+    public static void toText(Qtree qtext, String filePath) {
+        // Construire le texte à écrire dans un StringBuilder
+        StringBuilder textBuilder = new StringBuilder();
+
+        // Appel récursif pour construire le texte du quadtree
+        buildTreeText(qtext, textBuilder);
+
+        // Écriture dans le fichier
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(textBuilder.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void buildTreeText(Qtree qtext, StringBuilder textBuilder) {
+        if (qtext == null) return;
+
+        if (qtext.isEmpty()) {
+            // Si le nœud est une feuille, ajouter sa couleur
+            textBuilder.append(Couleurs.colorToString(qtext.getPlan().getColor()));
         } else {
-            System.out.print("(");
-            toText(qtext.getNE());
-            toText(qtext.getNO());
-            toText(qtext.getSE());
-            toText(qtext.getSO());
-            System.out.print(")");
+            // Ajouter une parenthèse ouvrante
+            textBuilder.append("(");
             
+            // Parcours récursif pour les fils
+            buildTreeText(qtext.getNE(), textBuilder);
+            buildTreeText(qtext.getNO(), textBuilder);
+            buildTreeText(qtext.getSE(), textBuilder);
+            buildTreeText(qtext.getSO(), textBuilder);
+            
+            // Ajouter une parenthèse fermante
+            textBuilder.append(")");
         }
     }
     
 
     public static void main(String[] args){
-
+        String text1 = "RivardPiard/sortie/RivardPiardFichierEntree_B.txt";
+        String text2 = "RivardPiard/sortie/RivardPiardFichierEntree_R.txt";
+        String draw1 = "RivardPiard/sortie/RivardPiardFichierEntree_B.png";
+        String draw2 = "RivardPiard/sortie/RivardPiardFichierEntree_R.png";
 
         lectureFichier();
         Qtree painting = new Qtree(centers.get(0), surface);
@@ -361,12 +387,12 @@ public class MonBoTablo {
         painting.buildQtree(centers);
         painting.printTree(10);
         Image masterpiece = new Image (taille, taille);
-        toImage(painting, masterpiece);
-        toText(painting);
-        drawOutline(painting, masterpiece);
-        recolor(lpairRecolor, painting, masterpiece);
-        drawOutline(painting, masterpiece);
-        toText(painting);
+        toImage(painting, masterpiece, draw1);
+        toText(painting, text1);
+        drawOutline(painting, masterpiece, draw1);
+        recolor(lpairRecolor, painting, masterpiece, draw2);
+        drawOutline(painting, masterpiece, draw2);
+        toText(painting, text2);
     }
 }
 
