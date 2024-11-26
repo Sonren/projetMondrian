@@ -87,7 +87,7 @@ public class MonBoTablo {
 
     public static void lectureFichier(){
         //lecture du fichier d'entrée pour pouvoir collecter les données utiles a la construction de la toile
-        try(Scanner scanner = new Scanner(new File("Fichier_Entree.txt"))){
+        try(Scanner scanner = new Scanner(new File("../test/Fichier_Entree.txt"))){
             taille = Integer.parseInt(scanner.nextLine().trim());
             nbCentre = Integer.parseInt(scanner.nextLine().trim());
 
