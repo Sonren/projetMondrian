@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 
 
-public class Main {
+public class MonBoTablo {
 
     //Enumeration pour pouvoir associer une chaine de caractère a une couleurs précise ici J = jaune par exemple 
     public enum Couleurs {
