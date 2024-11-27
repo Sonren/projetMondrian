@@ -27,10 +27,19 @@ public class MonBoTablo {
             this.couleurs = c;
         }
 
+
+        /**
+         * Retourne la couleur associée à cette constante
+         * @return la couleur
+         */
         public Color getCouleurs(){
             return this.couleurs;
         }
-
+        /**
+         * Permet de récupérer une couleur associée à un String donné
+         * @param c la chaine de caractère correspondant à la couleur
+         * @return la couleur associée
+         */
         public static Color whatColor(String c){  //A voir pour rajouter une erreur si jamais aucune couleur ne correspond
             Color color = null;
             
@@ -54,6 +63,12 @@ public class MonBoTablo {
             return color;
         }
 
+        /**
+         * Renvoie la chaine de caractere correspondant a la couleur.
+         * @param col la couleur dont on cherche le nom
+         * @return la chaine de caractere correspondant a la couleur
+         * @throws RuntimeException si la couleur n'est pas reconnue
+         */
         public static String colorToString(Color col) {
             if (Color.RED.equals(col)) {
                 return "R";
@@ -86,6 +101,18 @@ public class MonBoTablo {
     static Plan surface = new Plan(bordImage[1],bordImage[2],bordImage[3],bordImage[0],Color.BLUE); //taille de l'image 
     
 
+    /**
+     * Lit le fichier d'entrée pour collecter les données utiles 
+     * à la construction de la toile. Le fichier est composé de 
+     * 7 lignes : 
+     * 1. La taille du carré de l'image
+     * 2. Le nombre de centre
+     * 3. Les centres de la toile (leur position et les couleurs associées)
+     * 4. L'épaisseur des traits qui séparent chaque région
+     * 5. Le nombre de paires de recoloration
+     * 6. Les paires de recoloration (leur position et la couleur associée)
+     * Complexité : O(n), où n est le nombre de lignes dans le fichier.
+     */
     public static void lectureFichier(){
         //lecture du fichier d'entrée pour pouvoir collecter les données utiles a la construction de la toile
         try(Scanner scanner = new Scanner(new File("RivardPiard/test/Exemple1.txt"))){
@@ -121,6 +148,15 @@ public class MonBoTablo {
         }
     }
 
+    /**
+     * Construit l'image final en parcourant l'arbre Qtree et en dessinant
+     * les rectangles correspondants aux feuilles de l'arbre.
+     * Complexité : O(n), où n est le nombre de feuilles dans le Qtree.
+     * 
+     * @param qfinal l'arbre Qtree
+     * @param draw l'image a modifie
+     * @param file le nom du fichier a sauvegarder
+     */
     public static void toImage(Qtree qfinal, Image draw, String file){
         if(qfinal.getNE().isEmpty()){
             draw.setRectangle(qfinal.getNE().getPlan().getDownLeft().getX(), 
@@ -171,6 +207,18 @@ public class MonBoTablo {
         
     }
 
+/**
+ * Trace les contours du Qtree sur l'image donnée.
+ * 
+ * Cette méthode prend un Qtree et dessine ses contours en noir sur l'image spécifiée.
+ * Elle utilise l'épaisseur spécifiée pour tracer les lignes séparant les régions.
+ * Si le Qtree a des sous-arbres, la méthode est appelée récursivement sur ceux-ci.
+ * Complexité : O(n), où n est le nombre de nœuds dans le Qtree.
+ * 
+ * @param qfinal le Qtree dont les contours doivent être dessinés
+ * @param draw l'objet Image sur lequel dessiner
+ * @param file le nom du fichier où l'image doit être sauvegardée après le dessin
+ */
     public static void drawOutline(Qtree qfinal, Image draw, String file){
         if(qfinal != null){
 
@@ -205,7 +253,14 @@ public class MonBoTablo {
         }
     }
 
-    //fonction qui sert a retouver le parent d'un noeud 
+    /**
+     * Retourne le parent du nœud cible dans l'arbre.
+     * Complexité : O(n), où n est le nombre de nœuds dans le Qtree.
+     * 
+     * @param root   racine de l'arbre
+     * @param target nœud cible
+     * @return le parent du nœud cible, ou null si le nœud cible est null ou n'a pas de parent
+     */
     public static Qtree findParent(Qtree root, Qtree target) {
         if (root == null || root.estFeuille()) {
             return null; // Si c'est une feuille ou un arbre vide, pas de parent
@@ -231,10 +286,25 @@ public class MonBoTablo {
     }
     
 
+    /**
+     * Modifie l'image rectDraw en mettant à jour le rectangle qui correspond au Qtree rect.
+     * On utilise les coordonnées du plan de rect pour définir le rectangle.
+     */
     public static void majRectangle(Qtree rect, Image rectDraw){
         rectDraw.setRectangle(rect.getPlan().getDownLeft().getX(), rect.getPlan().getDownRight().getX(), rect.getPlan().getDownLeft().getY(), rect.getPlan().getUpLeft().getY(), rect.getPlan().getColor());
     }
 
+    /**
+     * Recolorie un Qtree en prenant en compte les paires de centre/récolleur fournie en argument.
+     * Pour chaque paire, on recherche le Qtree qui correspond à ce centre et on le recolore.
+     * On remplace ensuite la forme de ce Qtree par sa couleur.
+     * Enfin, on appelle la fonction compressQTree pour supprimer les sous-plans qui ont la même couleur.
+     * Complexité : O(m + k * h), où m est le nombre de paires, k est le nombre de nœuds parcourus pour chaque recoloration, et h est la hauteur du Qtree.
+     * @param listPairR La liste des paires de centre/récolleur
+     * @param root Le Qtree à recolorier
+     * @param finaldraw L'image qui sera modifiée pour prendre en compte la recoloration
+     * @param file Le nom du fichier où sera enregistrée l'image
+     */
     public static void recolor(List<Centre> listPairR, Qtree root, Image finaldraw, String file){
         System.err.println("\n");
         for (int i = 0; i < nbpairRecolor; i++){
@@ -254,7 +324,15 @@ public class MonBoTablo {
         }
     }
 
-    //creer une fonction qui va retrouver le pere a partir des fils a voir si cela est mieux que introduire un attribut parent
+    /**
+     * Fonction qui permet de compresser un Qtree en supprimant les sous-plans qui ont la même couleur.
+     * La compression est faite récursivement en explorant les sous-plans de l'arbre.
+     * Si un sous-plan a la même couleur que ses voisins, il est supprimé et son plan est coloré en conséquence.
+     * Complexité : O(n), où n est le nombre de nœuds dans le Qtree
+     * @param qroot Le Qtree à compresser
+     * @param compressDraw L'image qui sera modifiée pour prendre en compte la compression
+     * @param file Le nom du fichier où sera enregistrée l'image
+     */
     public static void compressQTree(Qtree qroot, Image compressDraw, String file){
         if (qroot == null) return;
         if((!qroot.getNE().estFeuille())){
@@ -338,6 +416,15 @@ public class MonBoTablo {
     }
     
 
+    /**
+     * Exporte la représentation textuelle du Qtree qtext dans un fichier.
+     * La représentation textuelle est une chaîne de caractères qui contient
+     * la couleur de chaque feuille du Qtree, ainsi que des parenthèses pour
+     * indiquer la structure de l'arbre.
+     * Complexité : O(n), où n est le nombre de nœuds dans le Qtree.
+     * @param qtext le Qtree dont on veut extraire la représentation textuelle
+     * @param filePath le chemin du fichier où sera écrite la représentation textuelle
+     */
     public static void toText(Qtree qtext, String filePath) {
         StringBuilder textBuilder = new StringBuilder();
 
@@ -350,6 +437,14 @@ public class MonBoTablo {
         }
     }
 
+    /**
+     * Ajoute la représentation textuelle du Qtree qtext dans le StringBuilder textBuilder.
+     * Si le nœud est une feuille, ajoute simplement sa couleur, sinon ajoute une parenthèse
+     * ouvrante, parcourt récursivement les fils et ajoute une parenthèse fermante.
+     * Complexité : O(n), où n est le nombre de nœuds dans le Qtree.
+     * @param qtext le Qtree dont on veut extraire la représentation textuelle
+     * @param textBuilder le StringBuilder dans lequel on écrit la représentation textuelle
+     */
     private static void buildTreeText(Qtree qtext, StringBuilder textBuilder) {
         if (qtext == null) return;
 
@@ -374,6 +469,19 @@ public class MonBoTablo {
 
 //----------------------------------------------Ttree------------------------------------------------------------------------------------
 
+
+    /**
+     * Lit le fichier d'entrée pour collecter les données utiles 
+     * à la construction de la toile. Le fichier est composé de 
+     * 7 lignes : 
+     * 1. La taille du carré de l'image
+     * 2. Le nombre de centre
+     * 3. Les centres de la toile (leur position et les couleurs associées)
+     * 4. L'épaisseur des traits qui séparent chaque région
+     * 5. Le nombre de paires de recoloration
+     * 6. Les paires de recoloration (leur position et la couleur associée)
+     * Complexité : O(n + m), où n est le nombre de centres et m le nombre de paires de recoloration.
+     */
     public static void lectureFichierTtree(){
         //lecture du fichier d'entrée pour pouvoir collecter les données utiles a la construction de la toile
         try(Scanner scanner = new Scanner(new File("RivardPiard/test/Exemple2.txt"))){
@@ -410,6 +518,14 @@ public class MonBoTablo {
 
 
 
+    /**
+     * Dessine le Ttree en noir sur l'image draw et la sauvegarde 
+     * dans le fichier file.
+     * Complexité : O(n), où n est le nombre de nœuds dans le Ttree.
+     * @param tfinal Ttree dont on veut dessiner le contour.
+     * @param draw Image sur laquelle on veut dessiner le contour.
+     * @param file Chemin du fichier dans lequel on veut sauvegarder l'image.
+     */
 public static void toImageTtree(Ttree tfinal, Image draw, String file){
         if(tfinal.getNE().isEmpty()){
             draw.setRectangle(tfinal.getNE().getPlan().getDownLeft().getX(), 
@@ -450,6 +566,13 @@ public static void toImageTtree(Ttree tfinal, Image draw, String file){
         
     }
 
+
+    /**
+     * Écrit la représentation textuelle du Ttree ttext dans un fichier au chemin filePath.
+     * O(n), où n est le nombre de nœuds dans le Ttree.
+     * @param ttext Ttree dont on veut écrire la représentation textuelle.
+     * @param filePath Chemin du fichier dans lequel on veut écrire la représentation textuelle.
+     */
     public static void toTextTtree(Ttree ttext, String filePath) {
         StringBuilder textBuilder = new StringBuilder();
 
@@ -462,6 +585,14 @@ public static void toImageTtree(Ttree tfinal, Image draw, String file){
         }
     }
 
+    /**
+     * Ajoute la représentation textuelle du Qtree ttext dans le StringBuilder textBuilder.
+     * Si le nœud est une feuille, ajoute simplement sa couleur, sinon ajoute une parenthèse
+     * ouvrante, parcourt récursivement les fils et ajoute une parenthèse fermante.
+     * O(n), où n est le nombre de nœuds dans le Ttree.
+     * @param ttext le Qtree dont on veut extraire la représentation textuelle
+     * @param textBuilder le StringBuilder dans lequel on écrit la représentation textuelle
+     */
     private static void buildTtreeText(Ttree ttext, StringBuilder textBuilder) {
         if (ttext == null) return;
 
@@ -483,6 +614,14 @@ public static void toImageTtree(Ttree tfinal, Image draw, String file){
     }
 
 
+    /**
+     * Dessine le contour du Ttree en noir sur l'image draw et la sauvegarde 
+     * dans le fichier file.
+     * Complexité : O(n), où n est le nombre de nœuds dans le Ttree.
+     * @param tfinal Ttree dont on veut dessiner le contour.
+     * @param draw Image sur laquelle on veut dessiner le contour.
+     * @param file Chemin du fichier dans lequel on veut sauvegarder l'image.
+     */
     public static void drawOutlineTtree(Ttree tfinal, Image draw, String file){
         if(tfinal != null){
 
@@ -514,7 +653,13 @@ public static void toImageTtree(Ttree tfinal, Image draw, String file){
         }
     }
 
-    //fonction qui sert a retouver le parent d'un noeud 
+    /**
+     * Fonction qui permet de trouver le parent d'un nœud Ttree cible dans l'arbre
+     * O(n), où n est le nombre de nœuds dans le Ttree.
+     * @param root le nœud racine de l'arbre
+     * @param target le nœud cible
+     * @return le parent du nœud cible ou null si il n'y a pas de parent
+     */
     public static Ttree findParentTtree(Ttree root, Ttree target) {
         if (root == null || root.estFeuille()) {
             return null; // Si c'est une feuille ou un arbre vide, pas de parent
@@ -537,10 +682,28 @@ public static void toImageTtree(Ttree tfinal, Image draw, String file){
     }
     
 
+    /**
+     * Modifie l'image rectDraw en mettant à jour le rectangle qui correspond au Qtree rect.
+     * On utilise les coordonnées du plan de rect pour définir le rectangle.
+     * Complexité : O(1)
+     * @param rect le Qtree dont le rectangle doit être mis à jour
+     * @param rectDraw l'image a modifie
+     */
     public static void majRectangleTtree(Ttree rect, Image rectDraw){
         rectDraw.setRectangle(rect.getPlan().getDownLeft().getX(), rect.getPlan().getDownRight().getX(), rect.getPlan().getDownLeft().getY(), rect.getPlan().getUpLeft().getY(), rect.getPlan().getColor());
     }
 
+    /**
+     * Cette fonction prend une liste de paires de points et un Qtree.
+     * Pour chaque paire, elle remplace le plan du Qtree qui correspond
+     * au point de la paire par le plan de la paire.
+     * Ensuite, elle compress le Qtree et le sauvegarde dans un fichier.
+     * Complexité : O(p + n), où p est le nombre de paires et n est le nombre de nœuds dans le Ttree.
+     * @param listPairR liste de paires de points
+     * @param root le Qtree
+     * @param finaldraw l'image
+     * @param file le nom du fichier
+     */
     public static void recolorTtree(List<Centre> listPairR, Ttree root, Image finaldraw, String file){
         System.err.println("\n");
         for (int i = 0; i < nbpairRecolor; i++){
@@ -560,7 +723,17 @@ public static void toImageTtree(Ttree tfinal, Image draw, String file){
         }
     }
 
-    //creer une fonction qui va retrouver le pere a partir des fils a voir si cela est mieux que introduire un attribut parent
+    /**
+     * Compression d'un arbre Ttree.
+     * Cette fonction parcourt l'arbre Ttree en profondeur et regroupe les feuilles
+     * qui ont la même couleur. Si les feuilles ont la même couleur, cela signifie 
+     * qu'il y a une zone de la toile qui a la même couleur. On peut donc fusionner 
+     * ces feuilles et les remplace par un seul rectangle.
+     * Complexité : O(n), où n est le nombre de nœuds dans le Ttree.
+     * @param troot le nœud racine de l'arbre Ttree
+     * @param compressDraw l'image qui sera compressée
+     * @param file le nom du fichier pour sauvegarder l'image compressée
+     */
     public static void compressQTtree(Ttree troot, Image compressDraw, String file){
         if (troot == null) return;
         if((!troot.getNE().estFeuille())){

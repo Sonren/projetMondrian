@@ -31,6 +31,11 @@ public class Ttree extends Qtree {
         return center == null;
     }
 
+    /**
+     * Retourne vrai si le Ttree n'a pas de fils (aucune division).
+     * Complexité : O(1)
+     * @return vrai si le Ttree n'a pas de fils
+     */
     public boolean noSon(){
         boolean son;
         if (this.NE == null || this.NO == null || this.SE == null) {
@@ -97,14 +102,21 @@ public class Ttree extends Qtree {
     }
 
 
+    /**
+     * Cherche la feuille du Ttree qui correspond au Centre c.
+     * Si le nœud actuel est une feuille, on a trouvé le bon endroit.
+     * Sinon, on détermine dans quel sous-quadrant se trouve le point
+     * et on appelle récursivement la méthode sur le sous-quadrant approprié.
+     * Si le sous-quadrant n'existe pas ou n'est pas initialisé, on retourne null.
+     * Complexité : O(log n), où n est le nombre de nœuds dans le Ttree.
+     * @param c le Centre à chercher
+     * @return la feuille du Ttree qui correspond au Centre c, ou null si elle n'existe pas
+     */
     public Ttree searchLeafTtree(Centre c) {
-        // Si le noeud actuel est une feuille (sans fils)
         if (estFeuille()) {
-            return this; // Retourne la feuille actuelle
+            return this; 
         }
-    
-        // Détermine dans quel sous-quadrant se trouve le point
-       
+           
         if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX() &&
                    c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
             // Sud-Est
@@ -121,14 +133,22 @@ public class Ttree extends Qtree {
             return this.NE.searchLeafTtree(c);
         }
     
-        // Si aucun fils correspondant n'existe ou n'est initialisé
         return null;
     }
     
     
 
     
-   //Etant donné un Centre C, retourne la région divisible (Qtree) à laquelle appartient C
+/**
+ * Cherche la région du Ttree qui correspond au Centre c.
+ * Si le nœud actuel est une feuille, on a trouvé le bon endroit.
+ * Sinon, on détermine dans quel sous-quadrant se trouve le point
+ * et on appelle récursivement la méthode sur le sous-quadrant approprié.
+ * Si le sous-quadrant n'existe pas, il est initialisé.
+ * Complexité : O(log n), où n est le nombre de nœuds dans le Ttree.
+ * @param c le Centre à chercher
+ * @return la région du Ttree qui correspond au Centre c
+ */
     public Ttree searchTtree(Centre c) {
         // Si le nœud actuel est une feuille, on a trouvé le bon endroit
         if (this.isEmpty()) {
@@ -153,7 +173,10 @@ public class Ttree extends Qtree {
         }
     }
 
-    //divise le plan en 4 fils et assigne chaque sous-plan a un fils
+    /**
+     * Initialise les sous-quadrants du Ttree actuel.
+     * La complexité est O(1) car on affecte simplement des valeurs.
+     */
     public void addTtree(){
         //On initialise les fils
         this.NO = new Ttree();
@@ -180,7 +203,19 @@ public class Ttree extends Qtree {
                             this.center.getC3()
                         );
     }
-    //Etant donnée une liste de centre, construit le Qtree en entier
+    /**
+     * Construit entièrement le Ttree à partir d'une liste de centres.
+     * 
+     * Pour chaque centre de la liste, si ce n'est pas le premier centre,
+     * cette méthode cherche la région du Ttree correspondante et la divise
+     * si nécessaire. Si le nœud trouvé n'est pas une feuille, on l'ajoute
+     * comme sous-quadrant. Sinon, un message de log est affiché pour indiquer
+     * une situation inattendue.
+     * 
+     * Complexité : O(n log n), où n est le nombre de centres.
+     * 
+     * @param centers la liste des centres à intégrer dans le Ttree
+     */
     public void buildTtree(List<Centre> centers) {
         for (Centre c : centers) {
             if(!(c == centers.get(0))){  
