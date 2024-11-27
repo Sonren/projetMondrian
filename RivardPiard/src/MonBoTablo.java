@@ -630,7 +630,7 @@ public static void toImageTtree(Ttree tfinal, Image draw, String file){
         String draw2 = "RivardPiard/sortie/RivardPiardFichierEntree_R.png";
 
         
-        if(args[0] == "1"){
+        if(args[0].equals("1")){
             lectureFichier();
             Qtree painting = new Qtree(centers.get(0), surface);
             painting.addQtree();
@@ -642,7 +642,7 @@ public static void toImageTtree(Ttree tfinal, Image draw, String file){
             recolor(lpairRecolor, painting, masterpiece, draw2);
             drawOutline(painting, masterpiece, draw2);
             toText(painting, text2);
-        }else if(args[0] == "2"){
+        }else if(args[0].equals("2")){
 
             lectureFichierTtree();
             Ttree painting = new Ttree(centers.get(0), surface);
