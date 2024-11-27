@@ -1,4 +1,3 @@
-package src;
 
 import java.awt.Color;
 import java.io.BufferedWriter;
@@ -122,7 +121,6 @@ public class MonBoTablo {
         }
     }
 
-    //probleme je pense ne passe dans les feuille que lorsque chaque fils est fils (voir feuille brouillon)
     public static void toImage(Qtree qfinal, Image draw, String file){
         if(qfinal.getNE().isEmpty()){
             draw.setRectangle(qfinal.getNE().getPlan().getDownLeft().getX(), 
@@ -244,7 +242,7 @@ public class MonBoTablo {
             temp.getPlan().setColor(listPairR.get(i).getC1());
             majRectangle(temp, finaldraw);
             Qtree parentTemp = findParent(root, temp);
-            Qtree parenDeParent = findParent(root, parentTemp);  //mauvaise compléxité car on le fait deux fois mais évite de devoir le faire pour tout l'arbre
+            Qtree parenDeParent = findParent(root, parentTemp);  
             drawOutline(parenDeParent, finaldraw, file);
         }
         compressQTree(root, finaldraw, file);
@@ -341,13 +339,10 @@ public class MonBoTablo {
     
 
     public static void toText(Qtree qtext, String filePath) {
-        // Construire le texte à écrire dans un StringBuilder
         StringBuilder textBuilder = new StringBuilder();
 
-        // Appel récursif pour construire le texte du quadtree
         buildTreeText(qtext, textBuilder);
 
-        // Écriture dans le fichier
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             writer.write(textBuilder.toString());
         } catch (IOException e) {
@@ -366,8 +361,8 @@ public class MonBoTablo {
             textBuilder.append("(");
             
             // Parcours récursif pour les fils
-            buildTreeText(qtext.getNE(), textBuilder);
             buildTreeText(qtext.getNO(), textBuilder);
+            buildTreeText(qtext.getNE(), textBuilder);
             buildTreeText(qtext.getSE(), textBuilder);
             buildTreeText(qtext.getSO(), textBuilder);
             
@@ -377,23 +372,290 @@ public class MonBoTablo {
     }
     
 
+//----------------------------------------------Ttree------------------------------------------------------------------------------------
+
+    public static void lectureFichierTtree(){
+        //lecture du fichier d'entrée pour pouvoir collecter les données utiles a la construction de la toile
+        try(Scanner scanner = new Scanner(new File("RivardPiard/test/Exemple2.txt"))){
+            taille = Integer.parseInt(scanner.nextLine().trim());
+            nbCentre = Integer.parseInt(scanner.nextLine().trim());
+
+            //On range tous les centres dans une liste (centers) ces centres sont lus dans le fichier d'entrée 
+            //a voir pour rajouter un test pour voir si le nombre de centres m = a la taille de la liste 
+            for (int i = 0; i < nbCentre; i++) {
+                String[] listeData = scanner.nextLine().trim().split(", ");
+                int x = Integer.parseInt(listeData[0].trim());
+                int y = Integer.parseInt(listeData[1].trim());
+                Color c1 = Couleurs.whatColor(listeData[2].trim()); 
+                Color c2 = Couleurs.whatColor(listeData[3].trim());
+                Color c3 = Couleurs.whatColor(listeData[4].trim()); 
+                centers.add(new Centre(x, y, c1, c2, c3, null)); 
+            }
+            epaisseur = Integer.parseInt(scanner.nextLine().trim());
+            nbpairRecolor = Integer.parseInt(scanner.nextLine().trim());
+
+            //La liste de toutes les PairRecolor extraite du fichier en entrée
+            for (int j = 0; j < nbpairRecolor; j++){
+                String[] listdataPair = scanner.nextLine().trim().split(", ");
+                int z = Integer.parseInt(listdataPair[0].trim());
+                int w = Integer.parseInt(listdataPair[1].trim());
+                Color tempcolor = Couleurs.whatColor(listdataPair[2].trim());
+                lpairRecolor.add(new Centre(z, w, tempcolor));
+            }
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+public static void toImageTtree(Ttree tfinal, Image draw, String file){
+        if(tfinal.getNE().isEmpty()){
+            draw.setRectangle(tfinal.getNE().getPlan().getDownLeft().getX(), 
+                              tfinal.getNE().getPlan().getDownRight().getX(), 
+                              tfinal.getNE().getPlan().getDownLeft().getY(), 
+                              tfinal.getNE().getPlan().getUpLeft().getY(), 
+                              tfinal.getNE().getPlan().getColor());    
+        }else{
+            toImageTtree(tfinal.getNE(), draw, file);
+        }
+
+        if(tfinal.getNO().isEmpty()){
+            draw.setRectangle(tfinal.getNO().getPlan().getDownLeft().getX(), 
+                              tfinal.getNO().getPlan().getDownRight().getX(), 
+                              tfinal.getNO().getPlan().getDownLeft().getY(), 
+                              tfinal.getNO().getPlan().getUpLeft().getY(),                              
+                              tfinal.getNO().getPlan().getColor());
+
+        }else{
+            toImageTtree(tfinal.getNO(), draw, file);
+        }
+
+        if(tfinal.getSE().isEmpty()){
+            draw.setRectangle(tfinal.getSE().getPlan().getDownLeft().getX(), 
+                              tfinal.getSE().getPlan().getDownRight().getX(), 
+                              tfinal.getSE().getPlan().getDownLeft().getY(), 
+                              tfinal.getSE().getPlan().getUpLeft().getY(),                              
+                              tfinal.getSE().getPlan().getColor());
+        }else{
+            toImageTtree(tfinal.getSE(), draw, file);
+        }
+        try{
+            draw.save(file);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+        
+    }
+
+    public static void toTextTtree(Ttree ttext, String filePath) {
+        StringBuilder textBuilder = new StringBuilder();
+
+        buildTtreeText(ttext, textBuilder);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            writer.write(textBuilder.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void buildTtreeText(Ttree ttext, StringBuilder textBuilder) {
+        if (ttext == null) return;
+
+        if (ttext.isEmpty()) {
+            // Si le nœud est une feuille, ajouter sa couleur
+            textBuilder.append(Couleurs.colorToString(ttext.getPlan().getColor()));
+        } else {
+            // Ajouter une parenthèse ouvrante
+            textBuilder.append("(");
+            
+            // Parcours récursif pour les fils
+            buildTreeText(ttext.getNE(), textBuilder);
+            buildTreeText(ttext.getNO(), textBuilder);
+            buildTreeText(ttext.getSE(), textBuilder);
+            
+            // Ajouter une parenthèse fermante
+            textBuilder.append(")");
+        }
+    }
+
+
+    public static void drawOutlineTtree(Ttree tfinal, Image draw, String file){
+        if(tfinal != null){
+
+            int firstX = tfinal.getCentre().getCoordPoint().getX() - epaisseur/2;
+            int lastX = firstX + epaisseur;
+            int firstY = tfinal.getPlan().getDownRight().getY();
+            int lastY = tfinal.getPlan().getUpright().getY();
+            draw.setRectangle(firstX, lastX ,firstY , lastY , Color.BLACK);
+            int secondX = tfinal.getCentre().getCoordPoint().getX();
+            int finishX = tfinal.getPlan().getUpright().getX();
+            int secondY = tfinal.getCentre().getCoordPoint().getY() - epaisseur/2;
+            int finishY = secondY + epaisseur;
+            draw.setRectangle(secondX, finishX, secondY, finishY, Color.BLACK);
+            if(!(tfinal.getNE().getCentre() == null)){
+                drawOutlineTtree(tfinal.getNE(), draw, file);
+            }
+            if(!(tfinal.getNO().getCentre() == null)){
+                drawOutlineTtree(tfinal.getNO(), draw, file);
+            }
+            if(!(tfinal.getSE().getCentre() == null)){
+                drawOutlineTtree(tfinal.getSE(), draw, file);
+            }
+            try{
+                draw.save(file);
+            }
+            catch (Exception e){
+                System.out.println(e);
+            }
+        }
+    }
+
+    //fonction qui sert a retouver le parent d'un noeud 
+    public static Ttree findParentTtree(Ttree root, Ttree target) {
+        if (root == null || root.estFeuille()) {
+            return null; // Si c'est une feuille ou un arbre vide, pas de parent
+        }
+    
+        // Vérifie si le nœud courant est le parent du nœud cible
+        if (root.getNE() == target || root.getNO() == target || 
+            root.getSE() == target) {
+            return root;
+        }
+    
+        // Recherche récursive dans les fils
+        Ttree found = findParentTtree(root.getNE(), target);
+        if (found != null) return found;
+    
+        found = findParentTtree(root.getNO(), target);
+        if (found != null) return found;
+    
+        return findParentTtree(root.getSE(), target);
+    }
+    
+
+    public static void majRectangleTtree(Ttree rect, Image rectDraw){
+        rectDraw.setRectangle(rect.getPlan().getDownLeft().getX(), rect.getPlan().getDownRight().getX(), rect.getPlan().getDownLeft().getY(), rect.getPlan().getUpLeft().getY(), rect.getPlan().getColor());
+    }
+
+    public static void recolorTtree(List<Centre> listPairR, Ttree root, Image finaldraw, String file){
+        System.err.println("\n");
+        for (int i = 0; i < nbpairRecolor; i++){
+            Ttree temp = root.searchLeafTtree(listPairR.get(i)); 
+            temp.getPlan().setColor(listPairR.get(i).getC1());
+            majRectangleTtree(temp, finaldraw);
+            Ttree parentTemp = findParentTtree(root, temp);
+            Ttree parenDeParent = findParentTtree(root, parentTemp);  
+            drawOutlineTtree(parenDeParent, finaldraw, file);
+        }
+        compressQTtree(root, finaldraw, file);
+        try{
+            finaldraw.save(file);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
+    //creer une fonction qui va retrouver le pere a partir des fils a voir si cela est mieux que introduire un attribut parent
+    public static void compressQTtree(Ttree troot, Image compressDraw, String file){
+        if (troot == null) return;
+        if((!troot.getNE().estFeuille())){
+            compressQTtree(troot.getNE(), compressDraw, file);
+        }else{
+            if(troot.getNE().getPlan().getColor() == troot.getNO().getPlan().getColor() &&
+               troot.getNE().getPlan().getColor() == troot.getSE().getPlan().getColor()){
+                    compressDraw.setRectangle(troot.getPlan().getDownLeft().getX(), 
+                                            troot.getPlan().getDownRight().getX(), 
+                                            troot.getPlan().getDownLeft().getY(), 
+                                            troot.getPlan().getUpLeft().getY(),
+                                            troot.getNO().getPlan().getColor());
+                    troot.getPlan().setColor(troot.getNE().getPlan().getColor());
+                    troot.setNullSon();
+                    troot.setCenter(null);
+                    System.out.println("l'arbre a été compressé");
+                    return;                         
+            }
+        }
+        if((!troot.getNO().estFeuille())){
+            compressQTtree(troot.getNO(), compressDraw, file);
+        }else{
+            if(troot.getNE().getPlan().getColor() == troot.getNO().getPlan().getColor() &&
+               troot.getNE().getPlan().getColor() == troot.getSE().getPlan().getColor()){
+                    compressDraw.setRectangle(troot.getPlan().getDownLeft().getX(), 
+                                            troot.getPlan().getDownRight().getX(), 
+                                            troot.getPlan().getDownLeft().getY(), 
+                                            troot.getPlan().getUpLeft().getY(),
+                                            troot.getNO().getPlan().getColor());
+                    troot.getPlan().setColor(troot.getNE().getPlan().getColor());
+                    troot.setNullSon();
+                    troot.setCenter(null);
+                    System.out.println("l'arbre a été compressé");
+                    return;                         
+            }
+        }
+        if((!troot.getSE().estFeuille())){
+            compressQTtree(troot.getSE(), compressDraw, file);
+        }else{
+            if(troot.getNE().getPlan().getColor() == troot.getNO().getPlan().getColor() &&
+               troot.getNE().getPlan().getColor() == troot.getSE().getPlan().getColor()){
+                    compressDraw.setRectangle(troot.getPlan().getDownLeft().getX(), 
+                                            troot.getPlan().getDownRight().getX(), 
+                                            troot.getPlan().getDownLeft().getY(), 
+                                            troot.getPlan().getUpLeft().getY(),
+                                            troot.getNO().getPlan().getColor());
+                    troot.getPlan().setColor(troot.getNE().getPlan().getColor());
+                    troot.setNullSon();
+                    troot.setCenter(null);
+                    System.out.println("l'arbre a été compressé");
+                    return;                         
+            }
+        }
+        try{
+            compressDraw.save(file);
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+    }
+
     public static void main(String[] args){
+
         String text1 = "RivardPiard/sortie/RivardPiardFichierEntree_B.txt";
         String text2 = "RivardPiard/sortie/RivardPiardFichierEntree_R.txt";
         String draw1 = "RivardPiard/sortie/RivardPiardFichierEntree_B.png";
         String draw2 = "RivardPiard/sortie/RivardPiardFichierEntree_R.png";
 
-        lectureFichier();
-        Qtree painting = new Qtree(centers.get(0), surface);
-        painting.addQtree();
-        painting.buildQtree(centers);
-        Image masterpiece = new Image (taille, taille);
-        toImage(painting, masterpiece, draw1);
-        toText(painting, text1);
-        drawOutline(painting, masterpiece, draw1);
-        recolor(lpairRecolor, painting, masterpiece, draw2);
-        drawOutline(painting, masterpiece, draw2);
-        toText(painting, text2);
+        
+
+            /*lectureFichier();
+            Qtree painting = new Qtree(centers.get(0), surface);
+            painting.addQtree();
+            painting.buildQtree(centers);
+            Image masterpiece = new Image (taille, taille);
+            toImage(painting, masterpiece, draw1);
+            toText(painting, text1);
+            drawOutline(painting, masterpiece, draw1);
+            recolor(lpairRecolor, painting, masterpiece, draw2);
+            drawOutline(painting, masterpiece, draw2);
+            toText(painting, text2);*/
+
+            lectureFichierTtree();
+            Ttree painting = new Ttree(centers.get(0), surface);
+            painting.addTtree();
+            painting.buildTtree(centers);
+            Image masterpiece = new Image (taille, taille);
+            toImageTtree(painting, masterpiece, draw1);
+            toTextTtree(painting, text1);
+            drawOutlineTtree(painting, masterpiece, draw1);
+            recolorTtree(centers, painting, masterpiece, draw2);
+            drawOutlineTtree(painting, masterpiece, draw2);
+            toTextTtree(painting, text2);
+
+
     }
 }
 

@@ -1,30 +1,27 @@
 import java.util.List;
 
 
-public class Qtree {
+public class Ttree extends Qtree {
 
     //Attributs
     private Plan plan; // partie divisé entre les quatres fils
     private Centre center;
-    private Qtree NO, NE, SE, SO;
+    private Ttree NO, NE, SE;
 
     //Construits un Qtree vide
-    public Qtree(){
+    public Ttree(){
         plan = null;
         center = null;
         NO = null;
         NE = null;
-        SE = null;
-        SO = null;
     }
     //Constructeur avec seulement un Centre
-    public Qtree(Centre p, Plan plan){
+    public Ttree(Centre p, Plan plan){
         this.plan = plan;
         this.center = p;
         NO = null;
         NE = null;
         SE = null;
-        SO = null;
     }
     
     //Méthodes
@@ -36,11 +33,11 @@ public class Qtree {
 
     public boolean noSon(){
         boolean son;
-        if (this.NE == null || this.NO == null || this.SE == null || this.SO == null) {
+        if (this.NE == null || this.NO == null || this.SE == null) {
             return true;
         }
         
-        son = this.NE.isEmpty() && this.NO.isEmpty() && this.SE.isEmpty() && this.SO.isEmpty();
+        son = this.NE.isEmpty() && this.NO.isEmpty() && this.SE.isEmpty();
         return son;
     }
 
@@ -55,21 +52,19 @@ public class Qtree {
         return center;
     }
 
-    public Qtree getNO() {
+    public Ttree getNO() {
         return NO;
     }
 
-    public Qtree getNE() {
+    public Ttree getNE() {
         return NE;
     }
 
-    public Qtree getSE() {
+    public Ttree getSE() {
         return SE;
     }
 
-    public Qtree getSO() {
-        return SO;
-    }
+    //Setter
 
     public void setNullNE(){
         this.NE = null;
@@ -83,15 +78,10 @@ public class Qtree {
         this.SE = null;
     }
 
-    public void setNullSO(){
-        this.SO = null;
-    }
-
     public void setNullSon(){
         this.setNullNE();
         this.setNullNO();
         this.setNullSE();
-        this.setNullSO();
     }
 
     public void setCenter(Centre c){
@@ -107,34 +97,28 @@ public class Qtree {
     }
 
 
-    public Qtree searchLeaf(Centre c) {
+    public Ttree searchLeafTtree(Centre c) {
         // Si le noeud actuel est une feuille (sans fils)
         if (estFeuille()) {
             return this; // Retourne la feuille actuelle
         }
     
         // Détermine dans quel sous-quadrant se trouve le point
-        if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX() &&
-            c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
-            // Sud-Ouest
-            if (this.SO != null) {
-                return this.SO.searchLeaf(c);
-            }
-        } else if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX() &&
+       
+        if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX() &&
                    c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
             // Sud-Est
             if (this.SE != null) {
-                return this.SE.searchLeaf(c);
+                return this.SE.searchLeafTtree(c);
             }
-        } else if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX() &&
-                   c.getCoordPoint().getY() > this.center.getCoordPoint().getY()) {
+        } else if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()) {
             // Nord-Ouest
             if (this.NO != null) {
-                return this.NO.searchLeaf(c);
+                return this.NO.searchLeafTtree(c);
             }
         } else if (this.NE != null) {
             // Nord-Est
-            return this.NE.searchLeaf(c);
+            return this.NE.searchLeafTtree(c);
         }
     
         // Si aucun fils correspondant n'existe ou n'est initialisé
@@ -145,7 +129,7 @@ public class Qtree {
 
     
    //Etant donné un Centre C, retourne la région divisible (Qtree) à laquelle appartient C
-    public Qtree searchQtree(Centre c) {
+    public Ttree searchTtree(Centre c) {
         // Si le nœud actuel est une feuille, on a trouvé le bon endroit
         if (this.isEmpty()) {
             this.center = c; // On affecte le centre ici
@@ -153,43 +137,35 @@ public class Qtree {
         }
     
         // Détermine dans quel sous-quadrant se trouve le point `c`
-        if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()
-            && c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
-            // Sud-Ouest
-            if (this.SO == null) this.SO = new Qtree(); // Initialise si nécessaire
-            return this.SO.searchQtree(c);
-        } else if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX()
+        if (c.getCoordPoint().getX() > this.center.getCoordPoint().getX()
             && c.getCoordPoint().getY() < this.center.getCoordPoint().getY()) {
             // Sud-Est
-            if (this.SE == null) this.SE = new Qtree(); // Initialise si nécessaire
-            return this.SE.searchQtree(c);
-        } else if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()
-            && c.getCoordPoint().getY() > this.center.getCoordPoint().getY()) {
+            if (this.SE == null) this.SE = new Ttree(); // Initialise si nécessaire
+            return this.SE.searchTtree(c);
+        } else if (c.getCoordPoint().getX() < this.center.getCoordPoint().getX()) {
             // Nord-Ouest
-            if (this.NO == null) this.NO = new Qtree(); // Initialise si nécessaire
-            return this.NO.searchQtree(c);
+            if (this.NO == null) this.NO = new Ttree(); // Initialise si nécessaire
+            return this.NO.searchTtree(c);
         } else {
             // Nord-Est
-            if (this.NE == null) this.NE = new Qtree(); // Initialise si nécessaire
-            return this.NE.searchQtree(c);
+            if (this.NE == null) this.NE = new Ttree(); // Initialise si nécessaire
+            return this.NE.searchTtree(c);
         }
     }
 
     //divise le plan en 4 fils et assigne chaque sous-plan a un fils
-    public void addQtree(){
+    public void addTtree(){
         //On initialise les fils
-        this.NO = new Qtree();
-        this.NE = new Qtree();
-        this.SE = new Qtree();
-        this.SO = new Qtree();
-        
+        this.NO = new Ttree();
+        this.NE = new Ttree();
+        this.SE = new Ttree();        
         
 
         this.NO.plan = new Plan(this.plan.getUpLeft(), 
                             new Point (this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY())
-                            , this.center.getCoordPoint() 
-                            , new Point(this.plan.getUpLeft().getX(), this.center.getCoordPoint().getY()),
-                            this.center.getC1()
+                            , new Point(this.center.getCoordPoint().getX(),this.plan.getDownRight().getY()) 
+                            , this.plan.getDownLeft()
+                            , this.center.getC1()
                         );   
         this.NE.plan = new Plan(new Point(this.center.getCoordPoint().getX(),this.plan.getUpLeft().getY()),
                             this.plan.getUpright(),
@@ -203,20 +179,14 @@ public class Qtree {
                             new Point(this.center.getCoordPoint().getX(),this.plan.getDownRight().getY()),
                             this.center.getC3()
                         );
-        this.SO.plan = new Plan(new Point(this.plan.getDownLeft().getX(),this.center.getCoordPoint().getY()),
-                            this.center.getCoordPoint(),
-                            new Point(this.center.getCoordPoint().getX(),this.plan.getDownLeft().getY()),
-                            this.plan.getDownLeft(),
-                            this.center.getC4()
-                        );
     }
     //Etant donnée une liste de centre, construit le Qtree en entier
-    public void buildQtree(List<Centre> centers) {
+    public void buildTtree(List<Centre> centers) {
         for (Centre c : centers) {
             if(!(c == centers.get(0))){  
-                Qtree target = this.searchQtree(c);
+                Ttree target = this.searchTtree(c);
                 if (!target.isEmpty()) { // Vérifiez si le nœud est une feuille
-                    target.addQtree(); // Divisez seulement si nécessaire
+                    target.addTtree(); // Divisez seulement si nécessaire
                 } else {
                     System.out.println("ya un truc bizarre");
                 }
